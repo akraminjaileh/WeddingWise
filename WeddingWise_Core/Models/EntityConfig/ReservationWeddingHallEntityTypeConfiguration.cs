@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WeddingWise_Core.Models.Entities;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.EntityConfig
 {
@@ -17,8 +16,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
 
-
-            //Check Constraint
+            //Check Constraint 
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_GuestCount", "GuestCount > 0"));
             builder.ToTable(x =>
@@ -27,8 +25,9 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_DayTime", "DayTime > SYSDATETIME()"));
-
-
+            //Foreign key 
+            builder.HasOne(z => z.Reservation)
+              .WithMany(z => z.ReservationWeddingHalls).OnDelete(DeleteBehavior.NoAction);
         }
     }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WeddingWise_Core.Enums
+﻿namespace WeddingWise_Core.Enums
 {
     public static class WeddingWiseLookups
     {
@@ -17,7 +11,7 @@ namespace WeddingWise_Core.Enums
         }
         public enum SweetType
         {
-            PremiumCake=101,
+            PremiumCake = 101,
             Cake,
             PremiumKunafa,
             Kunafa
@@ -25,7 +19,7 @@ namespace WeddingWise_Core.Enums
 
         public enum BeverageType
         {
-            SoftDrink=101,
+            SoftDrink = 101,
             Juice
 
         }
@@ -48,15 +42,15 @@ namespace WeddingWise_Core.Enums
         }
 
         public enum PaymentMethod
-        { 
-            Visa=101,
+        {
+            Visa = 101,
             PayPal,
             Wallet
         }
 
         public enum TransactionType
         {
-            Income=101,
+            Income = 101,
             Outcome
         }
     }

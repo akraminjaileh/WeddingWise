@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WeddingWise_Core.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class second2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,7 +27,7 @@ namespace WeddingWise_Core.Migrations
                     NationalNo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     UserType = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(7665))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(3279))
                 },
                 constraints: table =>
                 {
@@ -59,7 +59,7 @@ namespace WeddingWise_Core.Migrations
                     PricePerHour = table.Column<float>(type: "real", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(6124))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(8424))
                 },
                 constraints: table =>
                 {
@@ -92,7 +92,7 @@ namespace WeddingWise_Core.Migrations
                     TotalPrice = table.Column<float>(type: "real", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(1251))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(5117))
                 },
                 constraints: table =>
                 {
@@ -122,7 +122,7 @@ namespace WeddingWise_Core.Migrations
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 101),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(3927))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(5865))
                 },
                 constraints: table =>
                 {
@@ -152,7 +152,7 @@ namespace WeddingWise_Core.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 342, DateTimeKind.Local).AddTicks(2597))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(8245))
                 },
                 constraints: table =>
                 {
@@ -178,7 +178,7 @@ namespace WeddingWise_Core.Migrations
                     ReservationId = table.Column<int>(type: "int", nullable: false),
                     CarRentalId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(9423))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(1966))
                 },
                 constraints: table =>
                 {
@@ -195,8 +195,7 @@ namespace WeddingWise_Core.Migrations
                         name: "FK_ReservationCars_Reservations_ReservationId",
                         column: x => x.ReservationId,
                         principalTable: "Reservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -212,7 +211,7 @@ namespace WeddingWise_Core.Migrations
                     ReservationId = table.Column<int>(type: "int", nullable: false),
                     WeddingHallId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(3960))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(7905))
                 },
                 constraints: table =>
                 {
@@ -225,8 +224,7 @@ namespace WeddingWise_Core.Migrations
                         name: "FK_ReservationWeddingHalls_Reservations_ReservationId",
                         column: x => x.ReservationId,
                         principalTable: "Reservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ReservationWeddingHalls_WeddingHalls_WeddingHallId",
                         column: x => x.WeddingHallId,
@@ -249,7 +247,7 @@ namespace WeddingWise_Core.Migrations
                     StartPrice = table.Column<float>(type: "real", nullable: false),
                     WeddingHallId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(5684))
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(918))
                 },
                 constraints: table =>
                 {

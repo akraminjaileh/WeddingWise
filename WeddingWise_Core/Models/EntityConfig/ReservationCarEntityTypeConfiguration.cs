@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WeddingWise_Core.Models.Entities;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.EntityConfig
 {
@@ -16,14 +15,16 @@ namespace WeddingWise_Core.Models.EntityConfig
             //Nullable(is Not Null By Default) and Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
-            
-            
 
             //Check Constraint
-            builder.ToTable(x =>     
+            builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationCar_StartTime", "StartTime > SYSDATETIME()"));
-            builder.ToTable(x =>     
+            builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationCar_EndTime", "EndTime > StartTime"));
+
+            //Foreign key 
+            builder.HasOne(z => z.Reservation)
+                .WithMany(z => z.ReservationCars).OnDelete(DeleteBehavior.NoAction);
         }
     }
 

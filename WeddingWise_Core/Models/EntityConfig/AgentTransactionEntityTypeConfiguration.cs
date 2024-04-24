@@ -17,7 +17,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.Status).HasDefaultValue(Status.Pending);
-            
+
 
 
             //Check Constraint
@@ -27,7 +27,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("CH_AgentTransaction_Fees", "Fees >= 0"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 102"));
-            builder.ToTable(x =>     
+            builder.ToTable(x =>
             x.HasCheckConstraint("CH_AgentTransaction_TransactionType", "TransactionType BETWEEN 101 AND 102"));
 
         }

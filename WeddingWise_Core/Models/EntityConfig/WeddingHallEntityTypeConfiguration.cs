@@ -24,13 +24,13 @@ namespace WeddingWise_Core.Models.EntityConfig
             //Check Constraint
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_WeddingHall_Title", "LEN(Title) > 3"));
-            builder.ToTable(x =>     
+            builder.ToTable(x =>
             x.HasCheckConstraint("CH_WeddingHall_City", "City BETWEEN 101 AND 104"));
 
             //String Max Length
             builder.Property(x => x.Title).HasMaxLength(50);
             builder.Property(x => x.Review).HasMaxLength(200);
-         
+
         }
     }
 

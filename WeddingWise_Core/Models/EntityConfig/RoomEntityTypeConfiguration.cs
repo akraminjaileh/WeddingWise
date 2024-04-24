@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WeddingWise_Core.Models.Entities;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.EntityConfig
 {
@@ -32,7 +31,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.Floor).HasMaxLength(20);
             builder.Property(x => x.RoomName).HasMaxLength(20);
             builder.Property(x => x.Description).HasMaxLength(200);
-        
+
 
         }
     }

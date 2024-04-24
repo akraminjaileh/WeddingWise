@@ -39,7 +39,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(3927));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(5865));
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -107,7 +107,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(6124));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(8424));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -178,7 +178,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(1251));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(5117));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -244,7 +244,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 340, DateTimeKind.Local).AddTicks(9423));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(1966));
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -288,7 +288,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(3960));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(7905));
 
                     b.Property<DateTime>("DayTime")
                         .HasColumnType("datetime2");
@@ -339,7 +339,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(5684));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(918));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -410,7 +410,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 341, DateTimeKind.Local).AddTicks(7665));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(3279));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -490,7 +490,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 17, 37, 12, 342, DateTimeKind.Local).AddTicks(2597));
+                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(8245));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -568,7 +568,7 @@ namespace WeddingWise_Core.Migrations
                     b.HasOne("WeddingWise_Core.Models.Entities.Reservation", "Reservation")
                         .WithMany("ReservationCars")
                         .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CarRental");
@@ -581,7 +581,7 @@ namespace WeddingWise_Core.Migrations
                     b.HasOne("WeddingWise_Core.Models.Entities.Reservation", "Reservation")
                         .WithMany("ReservationWeddingHalls")
                         .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("WeddingWise_Core.Models.Entities.WeddingHall", "WeddingHall")

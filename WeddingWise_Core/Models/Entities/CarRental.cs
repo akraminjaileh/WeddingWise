@@ -17,7 +17,7 @@ namespace WeddingWise_Core.Models.Entities
         public City City { get; set; }
         public string Address { get; set; }
         public float PricePerHour { get; set; }
-       
+
         public virtual User User { get; set; }
         public virtual List<ReservationCar> ReservationCars { get; set; }
     }

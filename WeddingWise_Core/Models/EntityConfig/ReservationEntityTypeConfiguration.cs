@@ -32,7 +32,7 @@ namespace WeddingWise_Core.Models.EntityConfig
 
             //String Max Length
             builder.Property(x => x.PromoCode).HasMaxLength(20);
-            
+
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using WeddingWise_Core.Models.Shared;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.Entities
 {
