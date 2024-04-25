@@ -12,8 +12,8 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    [Migration("20240424170804_second2")]
-    partial class second2
+    [Migration("20240424215219_UpdateConstraint")]
+    partial class UpdateConstraint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(5865));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 720, DateTimeKind.Local).AddTicks(2109));
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -92,6 +92,9 @@ namespace WeddingWise_Core.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -110,7 +113,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 245, DateTimeKind.Local).AddTicks(8424));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 721, DateTimeKind.Local).AddTicks(6414));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -151,6 +154,8 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgentId");
+
                     b.HasIndex("LicensePlate")
                         .IsUnique();
 
@@ -158,13 +163,13 @@ namespace WeddingWise_Core.Migrations
 
                     b.ToTable("CarRentals", t =>
                         {
-                            t.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) > 3");
+                            t.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) >= 3");
 
                             t.HasCheckConstraint("CH_CarRental_City", "City BETWEEN 101 AND 104");
 
                             t.HasCheckConstraint("CH_CarRental_PricePerHour", "PricePerHour > 0");
 
-                            t.HasCheckConstraint("CH_CarRental_Title", "LEN(Title) > 3");
+                            t.HasCheckConstraint("CH_CarRental_Title", "LEN(Title) >= 3");
 
                             t.HasCheckConstraint("Ch_CarRental_Year", "Year < SYSDATETIME()");
                         });
@@ -181,7 +186,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(5117));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 725, DateTimeKind.Local).AddTicks(8350));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -247,7 +252,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(1966));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 725, DateTimeKind.Local).AddTicks(5016));
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -291,7 +296,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 246, DateTimeKind.Local).AddTicks(7905));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 726, DateTimeKind.Local).AddTicks(1366));
 
                     b.Property<DateTime>("DayTime")
                         .HasColumnType("datetime2");
@@ -342,7 +347,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(918));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 726, DateTimeKind.Local).AddTicks(4519));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -413,7 +418,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(3279));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 726, DateTimeKind.Local).AddTicks(6724));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -485,6 +490,9 @@ namespace WeddingWise_Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("City")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -493,7 +501,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 24, 20, 8, 3, 247, DateTimeKind.Local).AddTicks(8245));
+                        .HasDefaultValue(new DateTime(2024, 4, 25, 0, 52, 18, 727, DateTimeKind.Local).AddTicks(1229));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -516,6 +524,8 @@ namespace WeddingWise_Core.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AgentId");
 
                     b.HasIndex("UserId");
 
@@ -540,11 +550,19 @@ namespace WeddingWise_Core.Migrations
 
             modelBuilder.Entity("WeddingWise_Core.Models.Entities.CarRental", b =>
                 {
+                    b.HasOne("WeddingWise_Core.Models.Entities.User", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WeddingWise_Core.Models.Entities.User", "User")
                         .WithMany("CarRentals")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Agent");
 
                     b.Navigation("User");
                 });
@@ -611,11 +629,19 @@ namespace WeddingWise_Core.Migrations
 
             modelBuilder.Entity("WeddingWise_Core.Models.Entities.WeddingHall", b =>
                 {
+                    b.HasOne("WeddingWise_Core.Models.Entities.User", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WeddingWise_Core.Models.Entities.User", "User")
                         .WithMany("WeddingHalls")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Agent");
 
                     b.Navigation("User");
                 });

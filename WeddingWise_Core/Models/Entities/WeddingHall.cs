@@ -14,5 +14,6 @@ namespace WeddingWise_Core.Models.Entities
         public virtual List<Room> Rooms { get; set; }
         public virtual List<ReservationWeddingHall> ReservationWeddingHalls { get; set; }
         public virtual User User { get; set; }
+        public virtual User Agent { get; set; }
     }
 }

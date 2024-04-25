@@ -31,6 +31,10 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.Title).HasMaxLength(50);
             builder.Property(x => x.Review).HasMaxLength(200);
 
+            //Foreign key 
+            builder.HasOne(z => z.User)
+                .WithMany(z => z.WeddingHalls).OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 

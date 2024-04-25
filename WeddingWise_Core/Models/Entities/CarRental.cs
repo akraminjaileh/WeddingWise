@@ -19,6 +19,7 @@ namespace WeddingWise_Core.Models.Entities
         public float PricePerHour { get; set; }
 
         public virtual User User { get; set; }
+        public virtual User Agent { get; set; }
         public virtual List<ReservationCar> ReservationCars { get; set; }
     }
 }

@@ -24,9 +24,9 @@ namespace WeddingWise_Core.Models.EntityConfig
 
             //Check Constraint
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_CarRental_Title", "LEN(Title) > 3"));
+            x.HasCheckConstraint("CH_CarRental_Title", "LEN(Title) >= 3"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) > 3"));
+            x.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) >= 3"));
             builder.ToTable(x =>
             x.HasCheckConstraint("Ch_CarRental_Year", "Year < SYSDATETIME()"));
             builder.ToTable(x =>
@@ -42,6 +42,10 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.Brand).HasMaxLength(20);
             builder.Property(x => x.Modal).HasMaxLength(20);
             builder.Property(x => x.Address).HasMaxLength(200);
+
+            //Foreign key 
+            builder.HasOne(z => z.User)
+                .WithMany(z => z.CarRentals).OnDelete(DeleteBehavior.NoAction);
 
         }
 

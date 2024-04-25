@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WeddingWise-Infra\WeddingWise_Infra.csproj" />
     <ProjectReference Include="..\WeddingWise_Core\WeddingWise_Core.csproj" />
   </ItemGroup>
