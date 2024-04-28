@@ -1,16 +1,12 @@
-﻿using WeddingWise_Core.Models.Entities;
-using System.Linq.Expressions;
+﻿using WeddingWise_Core.DTO.User;
 namespace WeddingWise_Core.IRepos
 {
     public interface IAdminRepos
     {
-        //Employee Management
-        Task<List<User>> FindAllUser();
-        
-        //Client Management
-
-
-        //Agent Management
+        //User Management
+        Task CreateUser(CreateUserDTO user);
+        Task UpdateUser(UpdateUserDTO user);
+        Task DeleteUser(int id);
 
 
         //CarRental Management

@@ -12,6 +12,8 @@ namespace WeddingWise.ServicesReposConfig
         {
             services.AddScoped<IAdminRepos, AdminRepos>();
             services.AddScoped<IAdminServices, AdminServices>();
+            services.AddScoped<IGetRepos, GetRepos>();
+            services.AddScoped<IGetServices, GetServices>();
         }
     }
 }

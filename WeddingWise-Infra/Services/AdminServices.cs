@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeddingWise_Core.IRepos;
+﻿using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
-using WeddingWise_Core.Models.Entities;
 
 namespace WeddingWise_Infra.Services
 {
@@ -13,13 +7,22 @@ namespace WeddingWise_Infra.Services
     {
         private readonly IAdminRepos repos;
 
-        public AdminServices(IAdminRepos repos)
+        public AdminServices(IAdminRepos repos) => this.repos = repos;
+
+        public Task CreateUser(object user)
         {
-            this.repos = repos;
+            throw new NotImplementedException();
         }
-        public Task<List<User>> FindAllUser()
+
+        public Task UpdateUser(object user)
         {
-            return repos.FindAllUser();
+            throw new NotImplementedException();
+        }
+
+
+        public Task DeleteUser(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

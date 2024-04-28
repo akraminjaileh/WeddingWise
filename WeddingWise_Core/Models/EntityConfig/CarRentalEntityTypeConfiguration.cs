@@ -43,9 +43,9 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.Modal).HasMaxLength(20);
             builder.Property(x => x.Address).HasMaxLength(200);
 
-            //Foreign key 
-            builder.HasOne(z => z.User)
-                .WithMany(z => z.CarRentals).OnDelete(DeleteBehavior.NoAction);
+           
+          
+        
 
         }
 

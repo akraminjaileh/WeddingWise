@@ -25,9 +25,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_DayTime", "DayTime > SYSDATETIME()"));
-            //Foreign key 
-            builder.HasOne(z => z.Reservation)
-              .WithMany(z => z.ReservationWeddingHalls).OnDelete(DeleteBehavior.NoAction);
+           
         }
     }
 

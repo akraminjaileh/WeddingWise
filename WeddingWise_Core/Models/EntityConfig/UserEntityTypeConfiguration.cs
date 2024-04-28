@@ -13,6 +13,14 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
 
+            //Foreign key 
+            builder.HasMany(z => z.WeddingHalls)
+                .WithOne(z => z.User).OnDelete(DeleteBehavior.NoAction);
+          
+            builder.HasMany(z => z.CarRentals)
+                .WithOne(z => z.User).OnDelete(DeleteBehavior.NoAction);
+
+
             //Nullable(is Not Null By Default) and Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);

@@ -22,9 +22,6 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationCar_EndTime", "EndTime > StartTime"));
 
-            //Foreign key 
-            builder.HasOne(z => z.Reservation)
-                .WithMany(z => z.ReservationCars).OnDelete(DeleteBehavior.NoAction);
         }
     }
 

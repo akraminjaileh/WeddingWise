@@ -1,14 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeddingWise_Core.Models.Entities;
+﻿using WeddingWise_Core.DTO;
+using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.IServices
 {
     public interface IAdminServices
     {
-        Task<List<User>> FindAllUser();
+        //User Management
+        Task CreateUser(object user);
+        Task UpdateUser(object user);
+        Task DeleteUser(int id);
+
+
+        //CarRental Management
+
+
+        //Reservation Management
+
+
+        //Room Management
+
+
+        //WeddingHall Management
     }
 }
