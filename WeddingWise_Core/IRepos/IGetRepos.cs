@@ -16,6 +16,6 @@ namespace WeddingWise_Core.IRepos
         Task<IEnumerable<CarRentalRecordDTO>> GetAllCar();
         Task<CarRentalDetailsDTO> GetCarsDetails(int id , bool IsEmployee);
         Task<IEnumerable<WeddingHallRecordDTO>> GetAllWedding();
-        Task<WeddingHallDetailsDTO> GetWeddingDetails(int id);
+        Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, bool IsEmployee);
     }
 }

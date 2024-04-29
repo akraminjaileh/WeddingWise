@@ -7,7 +7,7 @@ using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.DTO.User
 {
-    public class UpdateUserDTO
+    public class CreateOrUpdateUserDTO
     {
         public int Id { get; set; }
         public string? Name { get; set; }

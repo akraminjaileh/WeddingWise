@@ -5,6 +5,8 @@ using WeddingWise_Core.DTO.AgentTransaction;
 using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Reservation;
 using WeddingWise_Core.DTO.ReservationCar;
+using WeddingWise_Core.DTO.ReservationWeddingHall;
+using WeddingWise_Core.DTO.Room;
 using WeddingWise_Core.DTO.User;
 using WeddingWise_Core.DTO.WeddingHall;
 using WeddingWise_Core.IRepos;
@@ -41,11 +43,14 @@ namespace WeddingWise_Infra.Repos
         {
 
             var user = await context.Users
+
                 .Include(u => u.AgentTransactions)
                 .Include(u => u.CarRentals)
                 .Include(u => u.WeddingHalls)
                 .Include(u => u.Reservations)
                 .FirstOrDefaultAsync(u => u.Id == id);
+
+
             if (user == null)
             {
                 return new UserDetailsDTO();
@@ -53,6 +58,7 @@ namespace WeddingWise_Infra.Repos
 
             var result = new UserDetailsDTO()
             {
+                Id = user.Id,
                 Name = user.Name,
                 Phone = user.Phone,
                 City = user.City,
@@ -74,24 +80,22 @@ namespace WeddingWise_Infra.Repos
             {
                 if (!user.AgentTransactions.IsNullOrEmpty())
                 {
-                    foreach (var transaction in user.AgentTransactions)
-                    {
-                        result.AgentTransactions.Add(new AgentTransactionRecordDTO()
-                        {
-                            Id = transaction.Id,
-                            Balance = transaction.Balance,
-                            TransactionType = transaction.TransactionType,
-                            Amount = transaction.Amount,
-                            Fees = transaction.Fees,
-                            Status = transaction.Status,
-                        });
-                    }
+                    user.AgentTransactions.ForEach(transaction =>
+                    result.AgentTransactions.Add(
+                      new AgentTransactionRecordDTO()
+                      {
+                          Id = transaction.Id,
+                          Balance = transaction.Balance,
+                          TransactionType = transaction.TransactionType,
+                          Amount = transaction.Amount,
+                          Fees = transaction.Fees,
+                          Status = transaction.Status,
+                      }));
                 }
 
                 if (!user.CarRentals.IsNullOrEmpty())
                 {
-                    foreach (var car in result.CarRentals)
-                    {
+                    result.CarRentals.ForEach(car =>
                         result.CarRentals.Add(new CarRentalRecordDTO()
                         {
                             Id = car.Id,
@@ -99,40 +103,36 @@ namespace WeddingWise_Infra.Repos
                             City = car.City,
                             PricePerHour = car.PricePerHour,
                             Year = car.Year
-                        });
-                    }
+                        }));
                 }
 
                 if (!user.WeddingHalls.IsNullOrEmpty())
                 {
-                    foreach (var wedding in result.WeddingHalls)
-                    {
+                    result.WeddingHalls.ForEach(wedding =>
                         result.WeddingHalls.Add(new WeddingHallRecordDTO()
                         {
                             Id = wedding.Id,
                             Title = wedding.Title,
                             City = wedding.City,
                             Review = wedding.Review
-                        });
-                    }
+                        }));
                 }
-
             }
 
             if (UserType.Client == result.UserType)
             {
                 if (!user.Reservations.IsNullOrEmpty())
                 {
-                    result.Reservations.ForEach(r =>
-                    {
+                    user.Reservations.ForEach(r => result.Reservations.Add(
+
                         new ReservationRecordDTO()
                         {
                             Id = r.Id,
                             TotalPrice = r.TotalPrice,
                             PaymentMethod = r.PaymentMethod,
                             Status = r.Status
-                        };
-                    });
+                        }
+                    ));
                 }
             }
 
@@ -162,8 +162,8 @@ namespace WeddingWise_Infra.Repos
             var cars = await context.CarRentals
                 .Include(c => c.User)
                 .Include(r => r.ReservationCars)
-                .Include(a=>a.Agent)
-                .FirstOrDefaultAsync(c=>c.Id==id);
+                .Include(a => a.Agent)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (cars == default)
             {
@@ -215,25 +215,104 @@ namespace WeddingWise_Infra.Repos
 
                 if (!cars.ReservationCars.IsNullOrEmpty())
                 {
-                    dto.ReservationCars
-                      .ForEach(car => new ReservationCarRecordDTO
-                      {
-                          Id = car.Id,
-                          EndTime = car.EndTime,
-                          StartTime = car.StartTime
-                      });
+                    cars.ReservationCars.ForEach(car => dto.ReservationCars.Add(
+                      new ReservationCarRecordDTO
+                      { Id = car.Id, EndTime = car.EndTime, StartTime = car.StartTime }));
+
                 }
 
             }
             return dto;
         }
+
         public async Task<IEnumerable<WeddingHallRecordDTO>> GetAllWedding()
         {
-            throw new NotImplementedException();
+            var wedding = await context.WeddingHalls.ToListAsync();
+            var dto = new List<WeddingHallRecordDTO>();
+            wedding.ForEach(wedding => dto.Add(new WeddingHallRecordDTO
+            {
+                Id = wedding.Id,
+                Title = wedding.Title,
+                City = wedding.City,
+                Review = wedding.Review
+
+            }));
+            return dto;
         }
-        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id)
+        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, bool IsEmployee)
         {
-            throw new NotImplementedException();
+            var wedding = await context.WeddingHalls
+               .Include(c => c.User)
+               .Include(r => r.ReservationWeddingHalls)
+               .Include(a => a.Agent)
+               .Include(b => b.Rooms)
+               .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (wedding == default)
+            {
+                throw new KeyNotFoundException("Car with the specified ID not found.");
+            }
+
+            var dto = new WeddingHallDetailsDTO()
+            {
+                Id = wedding.Id,
+                Title = wedding.Title,
+                Image = wedding.Image,
+                Review = wedding.Review,
+                City = wedding.City,
+                Address = wedding.Address,
+
+            };
+
+            if (IsEmployee)
+            {
+
+                dto.IsActive = wedding.IsActive;
+                dto.CreationDateTime = wedding.CreationDateTime;
+
+                if (wedding.User != null)
+                {
+                    dto.User = new UserRecordDTO
+                    {
+                        Id = wedding.User.Id,
+                        Name = wedding.User.Name,
+                        Phone = wedding.User.Phone
+                    };
+                }
+
+                if (wedding.Agent != null)
+                {
+                    dto.Agent = new UserRecordDTO
+                    {
+                        Id = wedding.Agent.Id,
+                        Name = wedding.Agent.Name,
+                        Phone = wedding.Agent.Phone
+                    };
+                }
+
+                if (!wedding.ReservationWeddingHalls.IsNullOrEmpty())
+                {
+                    wedding.ReservationWeddingHalls
+                        .ForEach(wed => dto.ReservationWeddingHalls.Add(
+                      new ReservationWeddingHallRecordDTO
+                      { Id = wed.Id, DayTime = wed.DayTime }));
+                }
+
+                if (!wedding.Rooms.IsNullOrEmpty())
+                {
+                    wedding.Rooms
+                        .ForEach(room => dto.Rooms.Add(
+                      new RoomRecordDTO
+                      {
+                          Id = room.Id,
+                          Image = room.Image,
+                          RoomName = room.RoomName,
+                          StartPrice = room.StartPrice
+                      }));
+                }
+
+            }
+            return dto;
         }
 
     }

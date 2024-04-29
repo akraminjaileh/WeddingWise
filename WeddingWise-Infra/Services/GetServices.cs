@@ -32,6 +32,7 @@ namespace WeddingWise_Infra.Services
 
         public async Task<object> GetOneUserDetails(int id, bool IsAdmin)
         {
+
             return await repos.GetOneUserDetails(id, IsAdmin);
         }
 
@@ -46,15 +47,15 @@ namespace WeddingWise_Infra.Services
             return await repos.GetCarsDetails(id, IsEmployee);
         }
 
-        public Task<IEnumerable<object>> GetAllWedding()
+        public async Task<IEnumerable<object>> GetAllWedding()
         {
-            throw new NotImplementedException();
+            return await repos.GetAllWedding();
         }
 
 
-        public Task<object> GetWeddingDetails(int id)
+        public async Task<object> GetWeddingDetails(int id, bool IsEmployee)
         {
-            throw new NotImplementedException();
+            return await repos.GetWeddingDetails(id, true);
         }
     }
 }

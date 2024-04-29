@@ -1,4 +1,5 @@
-﻿using WeddingWise_Core.IRepos;
+﻿using WeddingWise_Core.DTO.User;
+using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 
 namespace WeddingWise_Infra.Services
@@ -9,18 +10,22 @@ namespace WeddingWise_Infra.Services
 
         public AdminServices(IAdminRepos repos) => this.repos = repos;
 
-        public Task CreateUser(object user)
+        public async Task<int> CreateUser(CreateOrUpdateUserDTO dto)
         {
-            throw new NotImplementedException();
+           int affectedRows = await repos.CreateUser(dto);
+
+            return affectedRows;
         }
 
-        public Task UpdateUser(object user)
+        public async Task<int> UpdateUser(CreateOrUpdateUserDTO dto,int id, bool IsAdmin)
         {
-            throw new NotImplementedException();
+            int affectedRows = await repos.UpdateUser(dto,id,IsAdmin);
+
+            return affectedRows;
         }
 
 
-        public Task DeleteUser(int id)
+        public Task<int> DeleteUser(int id)
         {
             throw new NotImplementedException();
         }

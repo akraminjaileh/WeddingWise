@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WeddingWise_Core.DTO.User;
 using WeddingWise_Core.IServices;
 using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
@@ -62,6 +64,56 @@ namespace WeddingWise.Controllers
         public async Task<IActionResult> GetOneCar(int id)
         {
             return Ok(await getServices.GetCarsDetails(id,true));
+        }
+        [HttpGet]
+        [Route("[Action]")]
+        public async Task<IActionResult> GetAllWedding()
+        {
+            return Ok(await getServices.GetAllWedding());
+        }
+
+        [HttpGet]
+        [Route("[Action]")]
+        public async Task<IActionResult> GetOneWedding(int id)
+        {
+            return Ok(await getServices.GetWeddingDetails(id, true));
+        }
+
+        [HttpPost]
+        [Route("[Action]")]
+        public async Task<IActionResult> CreateUser(CreateOrUpdateUserDTO dto)
+        {
+
+            if (!ModelState.IsValid) 
+            {
+                return BadRequest(ModelState);
+            }
+
+            var col =await services.CreateUser(dto);
+            return Ok(col);
+        }
+        [HttpPut]
+        [Route("[Action]")]
+        public async Task<IActionResult> UpdateUser(CreateOrUpdateUserDTO dto , int id)
+        {
+            try
+            {
+                
+                var affectedRows = await services.UpdateUser(dto,id, false);
+                if (affectedRows > 0)
+                    return Ok(affectedRows);
+                else
+                    return NotFound("No user was updated, user not found.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+               
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the user.");
+            }
         }
 
     }

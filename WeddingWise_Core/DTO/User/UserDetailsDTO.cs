@@ -18,10 +18,10 @@ namespace WeddingWise_Core.DTO.User
         public string Image { get; set; }
         public string NationalNo { get; set; }
         public UserType UserType { get; set; }
-        public virtual List<AgentTransactionRecordDTO> AgentTransactions { get; set; }
-        public virtual List<ReservationRecordDTO> Reservations { get; set; }
-        public virtual List<CarRentalRecordDTO> CarRentals { get; set; }
-        public virtual List<WeddingHallRecordDTO> WeddingHalls { get; set; }
+        public virtual List<AgentTransactionRecordDTO> AgentTransactions { get; set; } = new List<AgentTransactionRecordDTO>();
+        public virtual List<ReservationRecordDTO> Reservations { get; set; } = new List<ReservationRecordDTO>();
+        public virtual List<CarRentalRecordDTO> CarRentals { get; set; } = new List<CarRentalRecordDTO>();
+        public virtual List<WeddingHallRecordDTO> WeddingHalls { get; set; } = new List<WeddingHallRecordDTO>();
         public bool IsActive { get; set; }
         public DateTime CreationDateTime { get; set; }
 

@@ -1,14 +1,13 @@
-﻿using WeddingWise_Core.DTO;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
+﻿using WeddingWise_Core.DTO.User;
 
 namespace WeddingWise_Core.IServices
 {
     public interface IAdminServices
     {
         //User Management
-        Task CreateUser(object user);
-        Task UpdateUser(object user);
-        Task DeleteUser(int id);
+        Task<int> CreateUser(CreateOrUpdateUserDTO user);
+        Task<int> UpdateUser(CreateOrUpdateUserDTO user ,int id, bool IsAdmin);
+        Task<int> DeleteUser(int id);
 
 
         //CarRental Management

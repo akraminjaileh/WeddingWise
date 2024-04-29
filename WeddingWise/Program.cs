@@ -10,8 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Db Context
-builder.Services.AddDbContext<WeddingWiseDbContext>(x =>
-                x.UseSqlServer(builder.Configuration.GetConnectionString("Local")));
+builder.Services.AddDbContext<WeddingWiseDbContext>(x =>x
+                .UseLazyLoadingProxies()
+                .UseSqlServer(builder.Configuration.GetConnectionString("Local")));
 
 //Configure Services and Repos
 builder.Services.ConfigureServices();

@@ -14,8 +14,8 @@ namespace WeddingWise_Core.DTO.WeddingHall
         public string Review { get; set; }
         public City City { get; set; }
         public string Address { get; set; }
-        public virtual List<RoomRecordDTO> Rooms { get; set; }
-        public virtual List<ReservationWeddingHallRecordDTO> ReservationWeddingHalls { get; set; }
+        public virtual List<RoomRecordDTO> Rooms { get; set; } = new List<RoomRecordDTO>();
+        public virtual List<ReservationWeddingHallRecordDTO> ReservationWeddingHalls { get; set; } = new List<ReservationWeddingHallRecordDTO>();
         public virtual UserRecordDTO User { get; set; }
         public virtual UserRecordDTO Agent { get; set; }
 

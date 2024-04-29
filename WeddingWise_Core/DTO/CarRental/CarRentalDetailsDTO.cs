@@ -21,7 +21,7 @@ namespace WeddingWise_Core.DTO.CarRental
 
         public virtual UserRecordDTO User { get; set; }
         public virtual UserRecordDTO Agent { get; set; }
-        public virtual List<ReservationCarRecordDTO> ReservationCars { get; set; }
+        public virtual List<ReservationCarRecordDTO> ReservationCars { get; set; } = new List<ReservationCarRecordDTO>();
 
         public bool IsActive { get; set; }
         public DateTime CreationDateTime { get; set; }
