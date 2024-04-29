@@ -12,22 +12,24 @@ namespace WeddingWise_Infra.Services
 
         public async Task<int> CreateUser(CreateOrUpdateUserDTO dto)
         {
-           int affectedRows = await repos.CreateUser(dto);
+            int affectedRows = await repos.CreateUser(dto);
 
             return affectedRows;
         }
 
-        public async Task<int> UpdateUser(CreateOrUpdateUserDTO dto,int id, bool IsAdmin)
+        public async Task<int> UpdateUser(CreateOrUpdateUserDTO dto, int id, bool IsAdmin)
         {
-            int affectedRows = await repos.UpdateUser(dto,id,IsAdmin);
+            int affectedRows = await repos.UpdateUser(dto, id, IsAdmin);
 
             return affectedRows;
         }
 
 
-        public Task<int> DeleteUser(int id)
+        public async Task<int> DeleteUser(int id)
         {
-            throw new NotImplementedException();
+            int affectedRows = await repos.DeleteUser(id);
+
+            return affectedRows;
         }
     }
 }

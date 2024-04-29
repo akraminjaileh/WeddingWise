@@ -19,13 +19,22 @@ namespace WeddingWise.Controllers
             this.getServices = getServices;
         }
 
-
+        #region User Management
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllUser()
         {
             return Ok(await getServices.GetAllUser(default));
         }
+
+        [HttpGet]
+        [Route("[Action]")]
+        public async Task<IActionResult> GetOneUser(int id)
+        {
+            return Ok(await getServices.GetOneUserDetails(id, true));
+        }
+
+
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllEmployee()
@@ -45,13 +54,52 @@ namespace WeddingWise.Controllers
             return Ok(await getServices.GetAllUser(UserType.Client));
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> GetOneUser(int id)
+        public async Task<IActionResult> CreateUser(CreateOrUpdateUserDTO dto)
         {
-            return Ok(await getServices.GetOneUserDetails(id,true));
+
+
+            var affectedRows = await services.CreateUser(dto);
+            return Ok(affectedRows);
         }
 
+        [HttpPut]
+        [Route("[Action]")]
+        public async Task<IActionResult> UpdateUser(CreateOrUpdateUserDTO dto, int id)
+        {
+            try
+            {
+
+                var affectedRows = await services.UpdateUser(dto, id, true);
+                if (affectedRows > 0)
+                    return Ok(affectedRows);
+                else
+                    return NotFound("No user was updated, user not found.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the user.");
+            }
+        }
+
+        [HttpPut]
+        [Route("[Action]")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var affectedRows = await services.DeleteUser(id);
+            return Ok(affectedRows);
+        }
+
+        #endregion
+
+
+        #region Car Management
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllCar()
@@ -65,6 +113,11 @@ namespace WeddingWise.Controllers
         {
             return Ok(await getServices.GetCarsDetails(id,true));
         }
+
+        #endregion
+
+
+        #region Wedding Management
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllWedding()
@@ -79,38 +132,8 @@ namespace WeddingWise.Controllers
             return Ok(await getServices.GetWeddingDetails(id, true));
         }
 
-        [HttpPost]
-        [Route("[Action]")]
-        public async Task<IActionResult> CreateUser(CreateOrUpdateUserDTO dto)
-        {
+        #endregion
 
-
-            var col =await services.CreateUser(dto);
-            return Ok(col);
-        }
-        [HttpPut]
-        [Route("[Action]")]
-        public async Task<IActionResult> UpdateUser(CreateOrUpdateUserDTO dto , int id)
-        {
-            try
-            {
-                
-                var affectedRows = await services.UpdateUser(dto,id, false);
-                if (affectedRows > 0)
-                    return Ok(affectedRows);
-                else
-                    return NotFound("No user was updated, user not found.");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-               
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the user.");
-            }
-        }
 
     }
 }
