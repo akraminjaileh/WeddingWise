@@ -84,10 +84,6 @@ namespace WeddingWise.Controllers
         public async Task<IActionResult> CreateUser(CreateOrUpdateUserDTO dto)
         {
 
-            if (!ModelState.IsValid) 
-            {
-                return BadRequest(ModelState);
-            }
 
             var col =await services.CreateUser(dto);
             return Ok(col);
