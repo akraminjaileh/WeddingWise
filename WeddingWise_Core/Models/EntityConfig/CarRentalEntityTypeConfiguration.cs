@@ -16,7 +16,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             //Nullable(is Not Null By Default) and Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
-            builder.Property(x => x.City).HasDefaultValue(City.Amman);
+            builder.Property(x => x.Status).HasDefaultValue(Status.Available);
             builder.Property(x => x.Description).IsRequired(false);
 
             //UNIQUE
@@ -31,6 +31,8 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("Ch_CarRental_Year", "Year < SYSDATETIME()"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_CarRental_City", "City BETWEEN 101 AND 104"));
+            builder.ToTable(x =>
+            x.HasCheckConstraint("CH_CarRental_Status", "Status BETWEEN 106 AND 107"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_CarRental_PricePerHour", "PricePerHour > 0"));
 

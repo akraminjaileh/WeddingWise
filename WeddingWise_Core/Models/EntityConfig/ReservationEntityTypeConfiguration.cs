@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WeddingWise_Core.Models.Entities;
+using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.EntityConfig
 {
@@ -25,7 +26,12 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.TaxAmount).HasDefaultValue(0);
             builder.Property(x => x.DiscountAmount).HasDefaultValue(0);
+            builder.Property(x => x.TotalPrice).HasDefaultValue(0);
+            builder.Property(x => x.NetPrice).HasDefaultValue(0);
+            builder.Property(x => x.Status).HasDefaultValue(Status.Pending);
+            builder.Property(x => x.PaymentMethod).HasDefaultValue(PaymentMethod.Visa);
             builder.Property(x => x.PromoCode).IsRequired(false);
+            
 
 
             //Check Constraint
@@ -34,7 +40,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_Reservation_PaymentMethod", "PaymentMethod BETWEEN 101 AND 103"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_Reservation_NetPrice", "NetPrice > 0"));
+            x.HasCheckConstraint("CH_Reservation_NetPrice", "NetPrice >= 0"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_Reservation_TotalPrice", "TotalPrice >= NetPrice"));
 

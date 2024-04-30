@@ -12,8 +12,9 @@ namespace WeddingWise_Core.IServices
         Task<IEnumerable<object>> GetAllUser(UserType userType);
         Task<object> GetOneUserDetails(int id , bool IsAdmin);
         Task<IEnumerable<object>> GetAllCar();
-        Task<object> GetCarsDetails(int id , bool IsEmployee);
+        Task<object> GetCarsDetails(int id , bool IsAdminOrEmployee);
         Task<IEnumerable<object>> GetAllWedding();
-        Task<object> GetWeddingDetails(int id, bool IsEmployee);
+        Task<object> GetWeddingDetails(int id, bool IsAdminOrEmployee);
+        Task<object> GetRoomDetails(int id, bool IsAdminOrEmployee);
     }
 }

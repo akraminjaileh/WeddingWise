@@ -14,7 +14,9 @@
             PremiumCake = 101,
             Cake,
             PremiumKunafa,
-            Kunafa
+            Kunafa,
+            Warbat,
+            PremiumWarbat
         }
 
         public enum BeverageType
@@ -38,7 +40,9 @@
             Confirmed, //The booking request has been accepted.
             Cancelled, //The booking has been cancelled(Not Paid).
             Completed, //The event has taken place and the booking is now closed.
-            Refunded   //The booking was cancelled and the payment was refunded.
+            Refunded,   //The booking was cancelled and the payment was refunded.
+            Available,  //for car and room
+            NotAvailable //for car and room
         }
 
         public enum PaymentMethod

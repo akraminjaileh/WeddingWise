@@ -18,7 +18,7 @@ namespace WeddingWise_Core.DTO.CarRental
         public City City { get; set; }
         public string Address { get; set; }
         public float PricePerHour { get; set; }
-
+        public Status Status { get; set; }
         public virtual UserRecordDTO User { get; set; }
         public virtual UserRecordDTO Agent { get; set; }
         public virtual List<ReservationCarRecordDTO> ReservationCars { get; set; } = new List<ReservationCarRecordDTO>();

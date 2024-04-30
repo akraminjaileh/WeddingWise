@@ -42,9 +42,9 @@ namespace WeddingWise_Infra.Services
             return await repos.GetAllCar();
         }
 
-        public async Task<object> GetCarsDetails(int id, bool IsEmployee)
+        public async Task<object> GetCarsDetails(int id, bool IsAdminOrEmployee)
         {
-            return await repos.GetCarsDetails(id, IsEmployee);
+            return await repos.GetCarsDetails(id, IsAdminOrEmployee);
         }
 
         public async Task<IEnumerable<object>> GetAllWedding()
@@ -53,9 +53,14 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<object> GetWeddingDetails(int id, bool IsEmployee)
+        public async Task<object> GetWeddingDetails(int id, bool IsAdminOrEmployee)
         {
-            return await repos.GetWeddingDetails(id, true);
+            return await repos.GetWeddingDetails(id, IsAdminOrEmployee);
+        }
+
+        public async Task<object> GetRoomDetails(int id, bool IsAdminOrEmployee)
+        {
+            return await repos.GetRoomDetails(id, IsAdminOrEmployee);
         }
     }
 }

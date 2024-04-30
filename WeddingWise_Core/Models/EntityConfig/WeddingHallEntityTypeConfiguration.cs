@@ -16,7 +16,6 @@ namespace WeddingWise_Core.Models.EntityConfig
             //Nullable(is Not Null By Default) and Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
-            builder.Property(x => x.City).HasDefaultValue(City.Amman);
             builder.Property(x => x.Image).IsRequired(false);
             builder.Property(x => x.Review).IsRequired(false);
 

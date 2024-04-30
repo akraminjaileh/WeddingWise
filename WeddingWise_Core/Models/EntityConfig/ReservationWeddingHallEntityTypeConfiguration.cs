@@ -20,7 +20,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_GuestCount", "GuestCount > 0"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_ReservationWeddingHall_SweetType", "SweetType BETWEEN 101 AND 104"));
+            x.HasCheckConstraint("CH_ReservationWeddingHall_SweetType", "SweetType BETWEEN 101 AND 106"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102"));
             builder.ToTable(x =>

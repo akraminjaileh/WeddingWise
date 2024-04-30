@@ -2,12 +2,17 @@
 
 namespace WeddingWise_Core.DTO.Room
 {
-    public class RoomRecordDTO
+    public class RoomDetailsDTO
     {
         public int Id { get; set; }
         public string RoomName { get; set; }
         public string Image { get; set; }
+        public int SeatsNumber { get; set; }
+        public string Floor { get; set; }
+        public string Description { get; set; }
         public float StartPrice { get; set; }
         public Status Status { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreationDateTime { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace WeddingWise_Infra.Repos
         public GetRepos(WeddingWiseDbContext context) => this.context = context;
 
 
+        #region Get User
         public async Task<IEnumerable<UserRecordDTO>> GetAllUser()
         {
             var user = await context.Users.ToListAsync();
@@ -138,8 +139,10 @@ namespace WeddingWise_Infra.Repos
 
             return result;
         }
+        #endregion
 
 
+        #region Get Car
         public async Task<IEnumerable<CarRentalRecordDTO>> GetAllCar()
         {
             var cars = await context.CarRentals.ToListAsync();
@@ -153,11 +156,12 @@ namespace WeddingWise_Infra.Repos
                     City = car.City,
                     PricePerHour = car.PricePerHour,
                     Year = car.Year,
+                    Status = car.Status
                 });
             };
             return dto;
         }
-        public async Task<CarRentalDetailsDTO> GetCarsDetails(int id, bool IsEmployee)
+        public async Task<CarRentalDetailsDTO> GetCarsDetails(int id, bool IsAdminOrEmployee)
         {
             var cars = await context.CarRentals
                 .Include(c => c.User)
@@ -183,11 +187,12 @@ namespace WeddingWise_Infra.Repos
                 City = cars.City,
                 Address = cars.Address,
                 PricePerHour = cars.PricePerHour,
-                LicensePlate = cars.LicensePlate
+                LicensePlate = cars.LicensePlate,
+                Status = cars.Status
 
             };
 
-            if (IsEmployee)
+            if (IsAdminOrEmployee)
             {
 
                 dto.IsActive = cars.IsActive;
@@ -224,7 +229,10 @@ namespace WeddingWise_Infra.Repos
             }
             return dto;
         }
+        #endregion
 
+
+        #region Get Wedding Hall
         public async Task<IEnumerable<WeddingHallRecordDTO>> GetAllWedding()
         {
             var wedding = await context.WeddingHalls.ToListAsync();
@@ -239,7 +247,7 @@ namespace WeddingWise_Infra.Repos
             }));
             return dto;
         }
-        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, bool IsEmployee)
+        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, bool IsAdminOrEmployee)
         {
             var wedding = await context.WeddingHalls
                .Include(c => c.User)
@@ -263,8 +271,21 @@ namespace WeddingWise_Infra.Repos
                 Address = wedding.Address,
 
             };
+            if (!wedding.Rooms.IsNullOrEmpty())
+            {
+                wedding.Rooms
+                    .ForEach(room => dto.Rooms.Add(
+                  new RoomRecordDTO
+                  {
+                      Id = room.Id,
+                      Image = room.Image,
+                      RoomName = room.RoomName,
+                      StartPrice = room.StartPrice,
+                      Status = room.Status
+                  }));
+            }
 
-            if (IsEmployee)
+            if (IsAdminOrEmployee)
             {
 
                 dto.IsActive = wedding.IsActive;
@@ -298,23 +319,51 @@ namespace WeddingWise_Infra.Repos
                       { Id = wed.Id, DayTime = wed.DayTime }));
                 }
 
-                if (!wedding.Rooms.IsNullOrEmpty())
-                {
-                    wedding.Rooms
-                        .ForEach(room => dto.Rooms.Add(
-                      new RoomRecordDTO
-                      {
-                          Id = room.Id,
-                          Image = room.Image,
-                          RoomName = room.RoomName,
-                          StartPrice = room.StartPrice
-                      }));
-                }
+
 
             }
             return dto;
         }
+        #endregion
+
+
+        #region Get Room 
+        public async Task<RoomDetailsDTO> GetRoomDetails(int id, bool IsAdminOrEmployee)
+        {
+            var room = await context.Rooms
+               .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (room == default)
+            {
+                throw new KeyNotFoundException("Room with the specified ID not found.");
+            }
+
+            var dto = new RoomDetailsDTO()
+            {
+                Id = room.Id,
+                RoomName = room.RoomName,
+                Image = room.Image,
+                SeatsNumber = room.SeatsNumber,
+                Floor = room.Floor,
+                Description = room.Description,
+                StartPrice = room.StartPrice,
+                Status = room.Status,
+
+            };
+
+            if (IsAdminOrEmployee)
+            {
+                dto.IsActive = room.IsActive;
+                dto.CreationDateTime = room.CreationDateTime;
+            }
+
+            return dto;
+
+        }
+        #endregion
+
 
     }
+
 }
 

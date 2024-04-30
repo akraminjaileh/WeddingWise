@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
+﻿using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.DTO.CarRental
 {
@@ -14,5 +9,6 @@ namespace WeddingWise_Core.DTO.CarRental
         public DateTime Year { get; set; }
         public City City { get; set; }
         public float PricePerHour { get; set; }
+        public Status Status { get; set; }
     }
 }
