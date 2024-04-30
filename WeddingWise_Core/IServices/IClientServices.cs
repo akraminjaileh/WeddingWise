@@ -8,6 +8,9 @@ namespace WeddingWise_Core.IServices
 {
     public interface IClientServices
     {
-        //Make a 
+        //Open Reservation Container
+        Task<int> OpenNewReservation(int id);
+       // Task CloseReservation();
+
     }
 }
