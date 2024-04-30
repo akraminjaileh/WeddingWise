@@ -7,12 +7,7 @@ namespace WeddingWise_Core.IServices
 {
     public interface IAdminServices
     {
-        //User Management
-        Task<int> CreateUser(CreateOrUpdateUserDTO dto, bool IsAdminOrEmployee);
-        Task<int> UpdateUser(CreateOrUpdateUserDTO dto, int id, bool IsAdmin);
-        Task<int> DeleteUser(int id);
-
-
+       
         //CarRental Management
         Task<int> CreateCar(CreateOrUpdateCarDTO dto);
         Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int id, bool IsAdmin);

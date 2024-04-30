@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WeddingWise_Core.Models.Entities;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.Models.EntityConfig
 {
@@ -16,7 +15,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             //Foreign key 
             builder.HasMany(z => z.WeddingHalls)
                 .WithOne(z => z.User).OnDelete(DeleteBehavior.NoAction);
-          
+
             builder.HasMany(z => z.CarRentals)
                 .WithOne(z => z.User).OnDelete(DeleteBehavior.NoAction);
 
@@ -26,6 +25,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
             builder.Property(x => x.Image).IsRequired(false);
             builder.Property(x => x.NationalNo).IsRequired(false);
+            builder.Property(x => x.Password).IsRequired(true);
 
             //UNIQUE
             builder.HasIndex(x => x.Phone).IsUnique(true);
@@ -46,6 +46,12 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("CH_User_Birthday", "DATEADD(YEAR, 16, Birthday) <= SYSDATETIME()"));
             builder.ToTable(x =>
             x.HasCheckConstraint("Ch_User_NationalNo", "LEN(NationalNo)=10"));
+            builder.ToTable(x =>
+            x.HasCheckConstraint("Ch_User_Password", @"LEN([Password]) > 4
+                                   AND PATINDEX('%[A-Z]%', [Password]) > 0
+                                   AND PATINDEX('%[a-z]%', [Password]) > 0
+                                   AND PATINDEX('%[0-9]%', [Password]) > 0
+                                   AND PATINDEX('%[^a-zA-Z0-9]%', [Password]) > 0"));
 
             //String Max Length
             builder.Property(x => x.Name).HasMaxLength(50);

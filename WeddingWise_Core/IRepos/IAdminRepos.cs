@@ -6,10 +6,7 @@ namespace WeddingWise_Core.IRepos
 {
     public interface IAdminRepos
     {
-        //User Management
-        Task<int> CreateUser(CreateOrUpdateUserDTO dto , bool IsAdminOrEmployee);
-        Task<int> UpdateUser(CreateOrUpdateUserDTO dto ,int id , bool IsAdmin);
-        Task<int> DeleteUser(int id);
+     
 
         //CarRental Management
         Task<int> CreateCar(CreateOrUpdateCarDTO dto);

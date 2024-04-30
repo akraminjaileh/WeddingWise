@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430180018_RequridPass")]
+    partial class RequridPass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

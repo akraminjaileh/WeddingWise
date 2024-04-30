@@ -16,32 +16,6 @@ namespace WeddingWise_Infra.Services
         public AdminServices(IAdminRepos repos) => this.repos = repos;
 
 
-        #region User Management
-        public async Task<int> CreateUser(CreateOrUpdateUserDTO dto, bool IsAdminOrEmployee)
-        {
-            int affectedRows = await repos.CreateUser(dto , IsAdminOrEmployee);
-
-            return affectedRows;
-        }
-
-        public async Task<int> UpdateUser(CreateOrUpdateUserDTO dto, int id, bool IsAdmin)
-        {
-            int affectedRows = await repos.UpdateUser(dto, id, IsAdmin);
-
-            return affectedRows;
-        }
-
-
-        public async Task<int> DeleteUser(int id)
-        {
-            int affectedRows = await repos.DeleteUser(id);
-
-            return affectedRows;
-        }
-
-#endregion
-
-
         #region CarRental Management
         public async Task<int> CreateCar(CreateOrUpdateCarDTO dto)
         {

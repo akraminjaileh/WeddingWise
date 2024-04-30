@@ -57,47 +57,7 @@ namespace WeddingWise.Controllers
             return Ok(await getServices.GetAllUser(UserType.Client));
         }
 
-        [HttpPost]
-        [Route("[Action]")]
-        public async Task<IActionResult> CreateUser(CreateOrUpdateUserDTO dto)
-        {
-
-
-            var affectedRows = await services.CreateUser(dto,true);
-            return Ok(affectedRows);
-        }
-
-        [HttpPut]
-        [Route("[Action]")]
-        public async Task<IActionResult> UpdateUser(CreateOrUpdateUserDTO dto, int id)
-        {
-            try
-            {
-
-                var affectedRows = await services.UpdateUser(dto, id, true);
-                if (affectedRows > 0)
-                    return Ok(affectedRows);
-                else
-                    return NotFound("No user was updated, user not found.");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the user.");
-            }
-        }
-
-        [HttpDelete]
-        [Route("[Action]")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var affectedRows = await services.DeleteUser(id);
-            return Ok(affectedRows);
-        }
+        
 
         #endregion
 

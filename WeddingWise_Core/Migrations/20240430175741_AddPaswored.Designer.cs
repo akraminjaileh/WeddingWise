@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430175741_AddPaswored")]
+    partial class AddPaswored
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 531, DateTimeKind.Local).AddTicks(1455));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 413, DateTimeKind.Local).AddTicks(5168));
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -111,7 +114,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 531, DateTimeKind.Local).AddTicks(3637));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 413, DateTimeKind.Local).AddTicks(9352));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -191,7 +194,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 532, DateTimeKind.Local).AddTicks(2117));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 416, DateTimeKind.Local).AddTicks(7168));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -265,7 +268,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 531, DateTimeKind.Local).AddTicks(7391));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 415, DateTimeKind.Local).AddTicks(3017));
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -309,7 +312,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 532, DateTimeKind.Local).AddTicks(7118));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 418, DateTimeKind.Local).AddTicks(734));
 
                     b.Property<DateTime>("DayTime")
                         .HasColumnType("datetime2");
@@ -360,7 +363,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 532, DateTimeKind.Local).AddTicks(9101));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 418, DateTimeKind.Local).AddTicks(7115));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -436,7 +439,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 546, DateTimeKind.Local).AddTicks(5560));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 433, DateTimeKind.Local).AddTicks(2708));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -461,7 +464,6 @@ namespace WeddingWise_Core.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -523,7 +525,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 4, 30, 21, 0, 17, 548, DateTimeKind.Local).AddTicks(508));
+                        .HasDefaultValue(new DateTime(2024, 4, 30, 20, 57, 40, 434, DateTimeKind.Local).AddTicks(2746));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");

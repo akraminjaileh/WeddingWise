@@ -1,10 +1,9 @@
 ﻿using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
-namespace WeddingWise_Core.DTO.User
+namespace WeddingWise_Core.DTO.Account
 {
-    public class CreateOrUpdateUserDTO
+    public class UpdateProfileDTO
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public string? Phone { get; set; }
         public City? City { get; set; }
@@ -14,8 +13,6 @@ namespace WeddingWise_Core.DTO.User
         public string? Image { get; set; }
         public string? NationalNo { get; set; }
         public UserType? UserType { get; set; }
-        public int UserId { get; set; }
-        public int AgentId { get; set; }
         public bool? IsActive { get; set; }
     }
 }
