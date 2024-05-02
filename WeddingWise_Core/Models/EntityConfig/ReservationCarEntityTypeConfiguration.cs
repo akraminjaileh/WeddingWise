@@ -21,6 +21,9 @@ namespace WeddingWise_Core.Models.EntityConfig
             x.HasCheckConstraint("CH_ReservationCar_StartTime", "StartTime > SYSDATETIME()"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationCar_EndTime", "EndTime > StartTime"));
+            builder.ToTable(x =>
+           x.HasCheckConstraint("CH_ReservationCar_StartTime", "StartTime > SYSDATETIME()"));
+          
 
         }
     }

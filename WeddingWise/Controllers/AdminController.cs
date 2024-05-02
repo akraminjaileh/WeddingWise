@@ -15,11 +15,13 @@ namespace WeddingWise.Controllers
     {
         private readonly IAdminServices services;
         private readonly IGetServices getServices;
+        private readonly ILogger<AdminController> logger;
 
-        public AdminController(IAdminServices services, IGetServices getServices)
+        public AdminController(IAdminServices services, IGetServices getServices, ILogger<AdminController> logger)
         {
             this.services = services;
             this.getServices = getServices;
+            this.logger = logger;
         }
 
         #region User Management

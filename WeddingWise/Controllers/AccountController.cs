@@ -9,10 +9,13 @@ namespace WeddingWise.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountServices services;
+        private readonly ILogger<AccountController> logger;
 
-        public AccountController(IAccountServices services) => this.services = services;
-
-
+        public AccountController(IAccountServices services,ILogger<AccountController> logger)
+        {
+            this.services = services;
+            this.logger = logger;
+        }
 
         [HttpPost]
         [Route("[Action]")]

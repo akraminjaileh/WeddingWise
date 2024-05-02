@@ -316,7 +316,7 @@ namespace WeddingWise_Infra.Repos
                     wedding.ReservationWeddingHalls
                         .ForEach(wed => dto.ReservationWeddingHalls.Add(
                       new ReservationWeddingHallRecordDTO
-                      { Id = wed.Id, DayTime = wed.DayTime }));
+                      { Id = wed.Id, StartTime = wed.StartTime , EndTime=wed.EndTime }));
                 }
 
 

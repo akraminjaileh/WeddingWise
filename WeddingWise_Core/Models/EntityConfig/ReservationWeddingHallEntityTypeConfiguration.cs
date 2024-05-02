@@ -12,6 +12,8 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
 
+            
+
             //Nullable(is Not Null By Default) and Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
@@ -24,8 +26,9 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_ReservationWeddingHall_DayTime", "DayTime > SYSDATETIME()"));
-           
+            x.HasCheckConstraint("CH_ReservationWeddingHall_StartTime", "StartTime > SYSDATETIME()"));
+            builder.ToTable(x =>
+            x.HasCheckConstraint("CH_ReservationWeddingHall_EndTime", "EndTime > StartTime"));
         }
     }
 

@@ -14,6 +14,7 @@ namespace WeddingWise_Core.Models.Entities
         public float StartPrice { get; set; }
         public Status Status { get; set; }
         public virtual WeddingHall WeddingHall { get; set; }
+        public virtual List<ReservationWeddingHall> ReservationWeddingHalls { get; set; }
 
     }
 }

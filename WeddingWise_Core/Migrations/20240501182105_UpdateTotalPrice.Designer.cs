@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501182105_UpdateTotalPrice")]
+    partial class UpdateTotalPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 181, DateTimeKind.Local).AddTicks(8854));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 866, DateTimeKind.Local).AddTicks(7650));
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -111,7 +114,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 182, DateTimeKind.Local).AddTicks(1929));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 866, DateTimeKind.Local).AddTicks(9906));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -191,7 +194,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 183, DateTimeKind.Local).AddTicks(3170));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 868, DateTimeKind.Local).AddTicks(7157));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -265,7 +268,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 182, DateTimeKind.Local).AddTicks(6337));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 868, DateTimeKind.Local).AddTicks(1328));
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -309,9 +312,9 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 184, DateTimeKind.Local).AddTicks(2475));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 869, DateTimeKind.Local).AddTicks(1652));
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<DateTime>("DayTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GuestCount")
@@ -325,12 +328,6 @@ namespace WeddingWise_Core.Migrations
                     b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("SweetType")
                         .HasColumnType("int");
 
@@ -341,19 +338,15 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.HasIndex("RoomId");
-
                     b.HasIndex("WeddingHallId");
 
                     b.ToTable("ReservationWeddingHalls", t =>
                         {
                             t.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102");
 
-                            t.HasCheckConstraint("CH_ReservationWeddingHall_EndTime", "EndTime > StartTime");
+                            t.HasCheckConstraint("CH_ReservationWeddingHall_DayTime", "DayTime > SYSDATETIME()");
 
                             t.HasCheckConstraint("CH_ReservationWeddingHall_GuestCount", "GuestCount > 0");
-
-                            t.HasCheckConstraint("CH_ReservationWeddingHall_StartTime", "StartTime > SYSDATETIME()");
 
                             t.HasCheckConstraint("CH_ReservationWeddingHall_SweetType", "SweetType BETWEEN 101 AND 106");
                         });
@@ -370,7 +363,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 184, DateTimeKind.Local).AddTicks(9941));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 869, DateTimeKind.Local).AddTicks(3645));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -446,7 +439,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 192, DateTimeKind.Local).AddTicks(7855));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 882, DateTimeKind.Local).AddTicks(4134));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -533,7 +526,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 1, 22, 16, 18, 193, DateTimeKind.Local).AddTicks(7337));
+                        .HasDefaultValue(new DateTime(2024, 5, 1, 21, 21, 3, 883, DateTimeKind.Local).AddTicks(186));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -637,12 +630,6 @@ namespace WeddingWise_Core.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WeddingWise_Core.Models.Entities.Room", "Room")
-                        .WithMany("ReservationWeddingHalls")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("WeddingWise_Core.Models.Entities.WeddingHall", "WeddingHall")
                         .WithMany("ReservationWeddingHalls")
                         .HasForeignKey("WeddingHallId")
@@ -650,8 +637,6 @@ namespace WeddingWise_Core.Migrations
                         .IsRequired();
 
                     b.Navigation("Reservation");
-
-                    b.Navigation("Room");
 
                     b.Navigation("WeddingHall");
                 });
@@ -695,11 +680,6 @@ namespace WeddingWise_Core.Migrations
                 {
                     b.Navigation("ReservationCars");
 
-                    b.Navigation("ReservationWeddingHalls");
-                });
-
-            modelBuilder.Entity("WeddingWise_Core.Models.Entities.Room", b =>
-                {
                     b.Navigation("ReservationWeddingHalls");
                 });
 

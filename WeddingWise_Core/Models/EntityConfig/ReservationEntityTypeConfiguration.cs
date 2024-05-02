@@ -42,7 +42,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_Reservation_NetPrice", "NetPrice >= 0"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_Reservation_TotalPrice", "TotalPrice >= NetPrice"));
+            x.HasCheckConstraint("CH_Reservation_TotalPrice", "TotalPrice >= 0"));
 
             //String Max Length
             builder.Property(x => x.PromoCode).HasMaxLength(20);

@@ -12,21 +12,43 @@ namespace WeddingWise_Infra.Repos
 
         public ClientRepos(WeddingWiseDbContext context) => this.context = context;
 
+
+        #region Effected on databases
+
         public void AddToDb(object obj)
         {
             context.Add(obj);
         }
-
+        public void UpdateOnDb(object obj)
+        {
+            context.Update(obj);
+        }
         public async Task<int> SaveChangesAsync()
         {
-           return await context.SaveChangesAsync();
+            return await context.SaveChangesAsync();
+        }
+
+        #endregion
+
+
+        #region Reservation Assist 
+
+        public async Task<Reservation> GetReservationById(int id)
+        {
+            var reservation = await context.Reservations.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (reservation == null)
+            {
+                throw new KeyNotFoundException($"Reservation with ID {id} not found.");
+            }
+            return reservation;
         }
 
         public async Task<User> OpenNewReservation(int id)
         {
             var client = await context.Users
                 .Include(r => r.Reservations).FirstOrDefaultAsync(c => c.Id == id);
-            
+
             if (client == null)
             {
                 throw new KeyNotFoundException($"Client with ID {id} not found.");
@@ -34,5 +56,82 @@ namespace WeddingWise_Infra.Repos
             return client;
 
         }
+
+
+        public async Task<bool> IsCarAvailable(int carId, DateTime startTime, DateTime endTime)
+        {
+            bool isUnavailable = await context.ReservationCars.AnyAsync(r =>
+                r.CarRental.Id == carId &&
+                r.Reservation.Status.HasFlag(Status.Confirmed) &&
+                ((r.StartTime <= endTime && r.StartTime >= startTime) ||
+                 (r.EndTime >= startTime && r.EndTime <= endTime) ||
+                 (r.StartTime <= startTime && r.EndTime >= endTime))
+                 );
+
+            return !isUnavailable;
+        }
+
+
+        public async Task<bool> IsRoomAvailable(int roomId, DateTime startTime, DateTime endTime)
+        {
+            bool isUnavailable = await context.ReservationWeddingHalls.AnyAsync(r =>
+                r.Room.Id == roomId &&
+                r.Reservation.Status.HasFlag(Status.Confirmed) &&
+                ((r.StartTime <= endTime && r.StartTime >= startTime) ||
+                 (r.EndTime >= startTime && r.EndTime <= endTime) ||
+                 (r.StartTime <= startTime && r.EndTime >= endTime))
+                 );
+
+            return !isUnavailable;
+        }
+
+        public async Task<Reservation> UpdateReservationPrice(int reservationId)
+        {
+            var reservationCarOrWedding = await context.Reservations.FindAsync(reservationId);
+            if (reservationCarOrWedding == null)
+            {
+                throw new KeyNotFoundException($"Reservation with ID {reservationCarOrWedding} not found.");
+            }
+            return reservationCarOrWedding;
+
+        }
+
+        #endregion
+
+
+        #region Reservation Action
+
+        public async Task<CarRental> AddOrUpdateCarInReservation(int id)
+        {
+            var car = await context.CarRentals
+                .Include(x => x.ReservationCars)
+                .ThenInclude(r=>r.Reservation)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (car == null)
+            {
+                throw new KeyNotFoundException($"Car with ID {id} not found.");
+            }
+            return car;
+        }
+
+        public async Task<Room> AddOrUpdateWeddingRoomInReservation(int id)
+        {
+            var room = await context.Rooms
+                .Include(m=>m.WeddingHall)
+                .Include(x => x.ReservationWeddingHalls)
+                .ThenInclude(r => r.Reservation)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (room == null)
+            {
+                throw new KeyNotFoundException($"Wedding with ID {id} not found.");
+            }
+            return room;
+        }
+
+        #endregion
+
+
     }
 }
