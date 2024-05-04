@@ -28,16 +28,21 @@ namespace WeddingWise.Controllers
 
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> CreateCar(CreateOrUpdateCarDTO dto)
+        public async Task<IActionResult> CreateCar(CreateOrUpdateCarDTO dto, [FromHeader] string token)
         {
-            return Ok(await services.CreateCar(dto));
+            var claims = await JWTDecoding.JWTDecod(token);
+
+            return Ok(await services.CreateCar(dto,claims));
         }
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> UpdateCar(CreateOrUpdateCarDTO dto, int id)
+        public async Task<IActionResult> UpdateCar(CreateOrUpdateCarDTO dto, int id, [FromHeader] string token)
         {
-            return Ok(await services.UpdateCar(dto, id, true));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+
+            return Ok(await services.UpdateCar(dto, id, userType));
         }
 
         [HttpDelete]

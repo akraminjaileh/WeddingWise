@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.Context;
 using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Room;
@@ -16,141 +17,61 @@ namespace WeddingWise_Infra.Repos
         public AdminRepos(WeddingWiseDbContext context) => this.context = context;
 
 
+        #region Effected on databases
+
+        public void AddToDb(object obj)
+        {
+            context.Add(obj);
+        }
+        public void UpdateOnDb(object obj)
+        {
+            context.Update(obj);
+        }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
+        }
+
+        #endregion
+
 
         #region CarRental Management
 
-        public async Task<int> CreateCar(CreateOrUpdateCarDTO dto)
+        public async Task<int> CreateCar(int AgentId)
         {
-            try
+            var agent = await context.Users.FindAsync(AgentId);
+            if (agent == null)
             {
-                var car = new CarRental
-                {
-                    Title = dto.Title,
-                    Image = dto.Image,
-                    Brand = dto.Brand,
-                    Color = dto.Color,
-                    Modal = dto.Modal,
-                    Year = dto.Year.Value,
-                    LicensePlate = dto.LicensePlate,
-                    City = dto.City.Value,
-                    Address = dto.Address,
-                    PricePerHour = dto.PricePerHour.Value
-                };
-
-                if (dto.UserId > 0)
-                {
-                    var user = await context.Users.FindAsync(dto.UserId);
-
-                    if (user == null)
-                    {
-                        throw new KeyNotFoundException($"User with ID {dto.UserId} not found.");
-                    }
-
-                    if (user.UserType == UserType.Employee || user.UserType == UserType.Employee)
-                    {
-                        car.User = user;
-                    }
-                    else
-                        throw new KeyNotFoundException($"Just Admin or Employee can be Create a Car");
-
-                }
-
-                if (dto.AgentId > 0)
-                {
-                    var agent = await context.Users.FindAsync(dto.AgentId);
-                    if (agent == null)
-                    {
-                        throw new KeyNotFoundException($"Agent with ID {dto.AgentId} not found.");
-                    }
-                    if (agent.UserType == UserType.Agent)
-                    {
-                        car.Agent = agent;
-                    }
-                    else
-                        throw new KeyNotFoundException($"Agent with ID {dto.AgentId} not found.");
-
-                }
-
-                await context.CarRentals.AddAsync(car);
-                int affectedRows = await context.SaveChangesAsync();
-                return affectedRows;
+                throw new KeyNotFoundException($"Agent with ID {AgentId} not found.");
             }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Failed to create car rental due to database constraints.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while creating car rental.", ex);
-            }
+
+            return agent.Id;
         }
 
-
-
-        public async Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int id, bool IsAdmin)
+        public async Task<CarRental> UpdateCar(int id)
         {
-            try
+            var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == id);
+            if (car == null)
             {
-                var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == id);
-
-                if (car == null)
-                {
-                    throw new KeyNotFoundException($"Car with ID {id} not found.");
-                }
-
-                car.Title = dto.Title ?? car.Title;
-                car.Image = dto.Image ?? car.Image;
-                car.Brand = dto.Brand ?? car.Brand;
-                car.Color = dto.Color ?? car.Color;
-                car.Description = dto.Description ?? car.Description;
-                car.Modal = dto.Modal ?? car.Modal;
-                car.City = dto.City ?? car.City;
-                car.Address = dto.Address ?? car.Address;
-                car.PricePerHour = dto.PricePerHour ?? car.PricePerHour;
-                car.Status = dto.Status ?? car.Status;
-
-                if (IsAdmin)
-                {
-                    car.Year = dto.Year ?? car.Year;
-                    car.LicensePlate = dto.LicensePlate ?? car.LicensePlate;
-                    car.IsActive = dto.IsActive;
-                }
-
-                context.Update(car);
-                int affectedRows = await context.SaveChangesAsync();
-                return affectedRows;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Failed to update car rental due to database constraints.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while updating car rental.", ex);
-            }
-        }
-
-
-
-        public async Task<int> DeleteCar(int id)
-        {
-            try
-            {
-                var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == id);
-                if (car != null)
-                {
-                    car.IsActive = false;
-                    context.Update(car);
-                    var affectedRows = await context.SaveChangesAsync();
-                    return affectedRows;
-                }
-
                 throw new KeyNotFoundException($"Car with ID {id} not found.");
             }
-            catch (Exception ex)
+
+            return car;
+        }
+
+
+
+        public async Task<CarRental> DeleteCar(int id)
+        {
+
+            var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (car == null)
             {
-                throw new Exception("An unexpected error occurred.", ex);
+                throw new KeyNotFoundException($"Car with ID {id} not found.");
             }
+
+            return car;
         }
 
         #endregion

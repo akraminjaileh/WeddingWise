@@ -1,4 +1,5 @@
-﻿using WeddingWise_Core.DTO.CarRental;
+﻿using System.IdentityModel.Tokens.Jwt;
+using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Room;
 using WeddingWise_Core.DTO.User;
 using WeddingWise_Core.DTO.WeddingHall;
@@ -7,10 +8,10 @@ namespace WeddingWise_Core.IServices
 {
     public interface IAdminServices
     {
-       
+
         //CarRental Management
-        Task<int> CreateCar(CreateOrUpdateCarDTO dto);
-        Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int id, bool IsAdmin);
+        Task<int> CreateCar(CreateOrUpdateCarDTO dto, JwtPayload token);
+        Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int id, string token);
         Task<int> DeleteCar(int id);
 
 
