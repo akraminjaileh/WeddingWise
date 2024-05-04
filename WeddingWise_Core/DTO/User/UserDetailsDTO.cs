@@ -8,7 +8,7 @@ namespace WeddingWise_Core.DTO.User
 {
     public class UserDetailsDTO
     {
-        public int Id { get; set; }
+       
         public string Name { get; set; }
         public string Phone { get; set; }
         public City City { get; set; }

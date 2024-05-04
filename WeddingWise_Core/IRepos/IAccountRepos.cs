@@ -1,13 +1,18 @@
 ﻿using WeddingWise_Core.DTO.Account;
 using WeddingWise_Core.DTO.User;
+using WeddingWise_Core.Models.Entities;
 
 namespace WeddingWise_Core.IRepos
 {
     public interface IAccountRepos
     {
+        //Effected on databases
+        Task<int> SaveChangesAsync();
+        void AddToDb(object obj);
+        void UpdateOnDb(object obj);
+
         //Account Management
-        Task<int> Registration(RegistrationDTO dto, bool IsAdminOrEmployee);
-        Task<int> UpdateProfile(UpdateProfileDTO dto, int id, bool IsAdmin);
-        Task<int> DisableAccount(int id);
+        Task<User> GetUserById(int id);
+        Task<User> Login(LoginDTO dto);
     }
 }

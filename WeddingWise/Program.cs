@@ -12,20 +12,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 
-
 //Db Context
 builder.Services.AddDbContext<WeddingWiseDbContext>(x => x
                 .UseLazyLoadingProxies()
                 .UseSqlServer(builder.Configuration.GetConnectionString("Local")));
 
-//Serilog Start
+//Serilog and Documentation Configure
 
 builder.Host.UseSerilog((context, configuration) =>
                      configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddSwaggerGenSerilog();
 
-//Serilog End
+
 
 //Configure Services and Repos
 builder.Services.ConfigureServices();
@@ -34,13 +33,14 @@ var app = builder.Build();
 
 
 Log.Information("Starting web host");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(s =>
     {
-        s.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Your Project");
+        s.SwaggerEndpoint("/swagger/v1.0/swagger.json", "WeddingWise");
     });
 }
 
@@ -50,6 +50,7 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

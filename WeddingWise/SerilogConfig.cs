@@ -12,13 +12,31 @@ namespace WeddingWise
            {
                c.SwaggerDoc("v1.0", new OpenApiInfo
                {
-                   Title = "Resturant Management API",
+                   Title = "Wedding Wise",
                    Version = "v1.0",
 
-                   Description = "This API  as a restaurant management system, " +
-                   "offering shared functions accessible to all users, known as shared functions, " +
-                   "alongside individualized functionalities for each user, ensuring " +
-                   "varied permissions among users.",
+                   Description = @"
+<b>Title:</b> WeddingWise - Halls & Cars
+
+<b>Description:</b> This API empowers a seamless wedding planning experience by facilitating online reservations for wedding halls and car rentals.
+
+<b>Functionalities:</b>
+
+<b>Clients:</b>
+- Search and browse available wedding halls and car rentals.
+- Make online reservations for halls and cars.
+- Manage existing reservations (view, modify, cancel). 
+
+<b>Agents:</b>
+- Register via Employee and manage their profiles.
+- Request to Add new wedding halls and car rentals to the platform.
+- Manage listed halls and cars (availability, pricing, descriptions etc.).
+- View client reservations for their listings.
+
+<b>Authentication:</b>
+- The API utilizes a JWT authentication system.
+- Clients and agents need to register and obtain tokens for authorization.
+",
 
                    TermsOfService = new Uri("https://example.com/terms"),
                    Contact = new OpenApiContact
@@ -29,7 +47,7 @@ namespace WeddingWise
                    },
                    License = new OpenApiLicense
                    {
-                       Name = "Resturant Management API LICX",
+                       Name = "WeddingWise LICX",
                        Url = new Uri("https://example.com/license"),
                    }
                });

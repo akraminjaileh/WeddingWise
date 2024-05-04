@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static WeddingWise_Core.Enums.WeddingWiseLookups;
+﻿using WeddingWise_Core.DTO.CarRental;
+using WeddingWise_Core.DTO.Room;
+using WeddingWise_Core.DTO.User;
+using WeddingWise_Core.DTO.WeddingHall;
 
 namespace WeddingWise_Core.IServices
 {
     public interface IGetServices
     {
-        Task<IEnumerable<object>> GetAllUser(UserType userType);
-        Task<object> GetOneUserDetails(int id , bool IsAdmin);
-        Task<IEnumerable<object>> GetAllCar();
-        Task<object> GetCarsDetails(int id , bool IsAdminOrEmployee);
-        Task<IEnumerable<object>> GetAllWedding();
-        Task<object> GetWeddingDetails(int id, bool IsAdminOrEmployee);
-        Task<object> GetRoomDetails(int id, bool IsAdminOrEmployee);
+        Task<IEnumerable<UserRecordDTO>> GetAllUser(string token);
+        Task<UserDetailsDTO> GetOneUserDetails(int id, string token);
+        Task<IEnumerable<CarRentalRecordDTO>> GetAllCar();
+        Task<CarRentalDetailsDTO> GetCarsDetails(int id, string token);
+        Task<IEnumerable<WeddingHallRecordDTO>> GetAllWedding();
+        Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, string token);
+        Task<RoomDetailsDTO> GetRoomDetails(int id, string token);
     }
 }

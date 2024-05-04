@@ -7,17 +7,18 @@ using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Room;
 using WeddingWise_Core.DTO.User;
 using WeddingWise_Core.DTO.WeddingHall;
+using WeddingWise_Core.Models.Entities;
 
 namespace WeddingWise_Core.IRepos
 {
     public interface IGetRepos
     {
-        Task<IEnumerable<UserRecordDTO>> GetAllUser();
-        Task<UserDetailsDTO> GetOneUserDetails(int id , bool IsAdmin);
-        Task<IEnumerable<CarRentalRecordDTO>> GetAllCar();
-        Task<CarRentalDetailsDTO> GetCarsDetails(int id , bool IsAdminOrEmployee);
-        Task<IEnumerable<WeddingHallRecordDTO>> GetAllWedding();
-        Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, bool IsAdminOrEmployee);
-        Task<RoomDetailsDTO> GetRoomDetails(int id, bool IsAdminOrEmployee);
+        Task<IEnumerable<User>> GetAllUser();
+        Task<User> GetOneUserDetails(int id);
+        Task<IEnumerable<CarRental>> GetAllCar();
+        Task<CarRental> GetCarsDetails(int id);
+        Task<IEnumerable<WeddingHall>> GetAllWedding();
+        Task<WeddingHall> GetWeddingDetails(int id);
+        Task<Room> GetRoomDetails(int id);
     }
 }

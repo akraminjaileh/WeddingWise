@@ -4,7 +4,6 @@ namespace WeddingWise_Core.DTO.Room
 {
     public class RoomDetailsDTO
     {
-        public int Id { get; set; }
         public string RoomName { get; set; }
         public string Image { get; set; }
         public int SeatsNumber { get; set; }
