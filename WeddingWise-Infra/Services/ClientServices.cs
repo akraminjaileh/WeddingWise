@@ -59,8 +59,11 @@ namespace WeddingWise_Infra.Services
                     return (float)hours * wedding.Room.StartPrice;
 
                 });
-                reservation.NetPrice = totalNetPriceWedding + totalNetPriceCar;
-
+                float netPrice =  totalNetPriceWedding + totalNetPriceCar;
+                reservation.NetPrice = netPrice;
+                float tax =  0.16f * netPrice;
+                reservation.TaxAmount = tax;
+                reservation.TotalPrice = netPrice + tax;
                 repos.UpdateOnDb(reservation);
                 await repos.SaveChangesAsync();
             }
@@ -110,7 +113,7 @@ namespace WeddingWise_Infra.Services
                     car.ReservationCars.Add(carInReservation);
                     repos.AddToDb(carInReservation);
                     int effectedRows = await repos.SaveChangesAsync();
-                    await repos.UpdateReservationPrice(reservationId);
+                    await UpdateReservationPrice(reservationId);
                     return effectedRows;
                 }
 
@@ -158,7 +161,7 @@ namespace WeddingWise_Infra.Services
 
                     var reservationId = await OpenNewReservation(dto.ClientId);
 
-                    var existingReservation = await repos.GetReservationById(reservationId);
+                    var existingReservation = await repos.GetReservationDetails(reservationId);
 
 
                     roomInReservation.Reservation = existingReservation;
@@ -175,7 +178,7 @@ namespace WeddingWise_Infra.Services
 
                     if (effectedRows > 0)
                     {
-                        await repos.UpdateReservationPrice(reservationId);
+                        await UpdateReservationPrice(reservationId);
                     }
 
                     return effectedRows;
@@ -206,7 +209,7 @@ namespace WeddingWise_Infra.Services
                 var carReservation = await repos.RemoveCarFromReservation(id);
                 repos.DeleteFromDb(carReservation);
                 var affectedRows = await repos.SaveChangesAsync();
-                await repos.UpdateReservationPrice(id);
+                await UpdateReservationPrice(id);
                 return affectedRows;
             }
             catch (Exception ex)
@@ -227,8 +230,8 @@ namespace WeddingWise_Infra.Services
                 var weddingReservation = await repos.RemoveWeddingRoomFromReservation(id);
                 repos.DeleteFromDb(weddingReservation);
                 var affectedRows = await repos.SaveChangesAsync();
-                await repos.UpdateReservationPrice(id);
-                return affectedRows;
+                UpdateReservationPrice(id);
+                return  affectedRows;
             }
             catch (Exception ex)
             {
@@ -284,7 +287,7 @@ namespace WeddingWise_Infra.Services
         {
             try
             {
-                if (!token.Claims.Any())
+                if (token == null || !token.Claims.Any())
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
@@ -293,16 +296,13 @@ namespace WeddingWise_Infra.Services
 
                 string userType = token.ElementAt(1).Value.ToString();
 
-                if (!userType.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                if (!userType.Equals(UserType.Client.ToString()))
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-
                 }
 
                 var reservation = await repos.GetReservationDetails(id);
-                var reservationList = new ReservationDetailsDTO();
-
-                var dto = new ReservationDetailsDTO()
+                var reservationDetailsDTO = new ReservationDetailsDTO()
                 {
                     NetPrice = reservation.NetPrice,
                     DiscountAmount = reservation.DiscountAmount,
@@ -310,40 +310,39 @@ namespace WeddingWise_Infra.Services
                     TotalPrice = reservation.TotalPrice,
                     PromoCode = reservation.PromoCode,
                     PaymentMethod = reservation.PaymentMethod,
-                    Status = reservation.Status
+                    Status = reservation.Status,
+                    ReservationCars = new List<ReservationCarRecordDTO>(),
+                    ReservationWeddingHalls = new List<ReservationWeddingHallRecordDTO>()
                 };
+
                 if (reservation.ReservationCars.Any())
                 {
-                    reservation.ReservationCars.ForEach(car => dto.ReservationCars
-                          .Add(new ReservationCarRecordDTO
-                          {
-                              Id = car.Id,
-                              StartTime = car.StartTime,
-                              EndTime = car.EndTime,
-                          }));
+                    reservationDetailsDTO.ReservationCars.AddRange(reservation.ReservationCars.Select(car => new ReservationCarRecordDTO()
+                    {
+                        Id = car.Id,
+                        StartTime = car.StartTime,
+                        EndTime = car.EndTime
+                    }));
                 }
 
                 if (reservation.ReservationWeddingHalls.Any())
                 {
-                    reservation.ReservationWeddingHalls.ForEach(car => dto.ReservationWeddingHalls
-                         .Add(new ReservationWeddingHallRecordDTO
-                         {
-                             Id = car.Id,
-                             StartTime = car.StartTime,
-                             EndTime = car.EndTime,
-
-                         }));
+                    reservationDetailsDTO.ReservationWeddingHalls.AddRange(reservation.ReservationWeddingHalls.Select(hall => new ReservationWeddingHallRecordDTO()
+                    {
+                        Id = hall.Id,
+                        StartTime = hall.StartTime,
+                        EndTime = hall.EndTime
+                    }));
                 }
 
-
-                return reservationList;
-
+                return reservationDetailsDTO;
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Failed to retrieve reservation data", ex);
             }
         }
+
 
 
         public async Task<int> Checkout(int id, JwtPayload token)

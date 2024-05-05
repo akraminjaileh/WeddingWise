@@ -42,7 +42,8 @@ namespace WeddingWise_Infra.Services
                     Phone = dto.Phone
                 };
 
-
+                user.UserType = UserType.Client;
+                user.CreationDateTime = DateTime.Now;
                 repos.AddToDb(user);
 
                 int affectedRows = await repos.SaveChangesAsync();
@@ -91,13 +92,31 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<int> UpdateProfile(UpdateProfileDTO dto, int id, string userType)
+        public async Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload token, int id)
         {
 
             try
             {
-                var user = await repos.GetUserById(id);
+                if (!token.Claims.Any())
+                {
+                    throw new KeyNotFoundException("Invalid Token Claims");
+                }
 
+                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+
+                string userType = token.ElementAt(1).Value.ToString();
+
+                if (token.IsNullOrEmpty())
+                {
+                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
+                }
+                var user = await repos.GetUserById(userId);
+
+                if (userType.Equals(UserType.Admin.ToString()))
+                {
+                    user = await repos.GetUserById(id);
+                }
                 if (user == null)
                 {
                     throw new KeyNotFoundException($"User with ID {id} not found.");

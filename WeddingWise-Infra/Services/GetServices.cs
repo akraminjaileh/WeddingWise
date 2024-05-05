@@ -210,7 +210,7 @@ namespace WeddingWise_Infra.Services
                     return dto;
                 }
 
-                if (token.Equals(UserType.Agent.ToString()) || token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Admin.ToString()))
+                if (token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Admin.ToString()))
                 {
                     dto.LicensePlate = cars.LicensePlate;
                     dto.CreationDateTime = cars.CreationDateTime;
@@ -316,7 +316,7 @@ namespace WeddingWise_Infra.Services
                     return dto;
                 }
 
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Agent.ToString()))
+                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
                 {
                     dto.IsActive = wedding.IsActive;
                     dto.CreationDateTime = wedding.CreationDateTime;
@@ -330,10 +330,7 @@ namespace WeddingWise_Infra.Services
                             EndTime = wed.EndTime
                         }));
                     }
-                }
 
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
-                {
                     if (wedding.User != null)
                     {
                         dto.User = new UserRecordDTO
@@ -389,7 +386,7 @@ namespace WeddingWise_Infra.Services
                     return dto;
                 }
 
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Agent.ToString()))
+                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
                 {
                     dto.IsActive = room.IsActive;
                     dto.CreationDateTime = room.CreationDateTime;

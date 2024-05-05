@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeddingWise_Core.DTO.ReservationWeddingHall;
+using WeddingWise_Core.Helper;
 using WeddingWise_Core.IServices;
 
 namespace WeddingWise.Controllers
@@ -17,35 +18,72 @@ namespace WeddingWise.Controllers
             this.logger = logger;
         }
 
-
-        [HttpPost]
+        [HttpGet]
         [Route("[Action]")]
-        public async Task<IActionResult> OpenNewReservation(int id)
+        public async Task<IActionResult> GetReservationHistory([FromHeader] string token)
         {
-            return Ok(await services.OpenNewReservation(id));
+            var claims = await JWTDecoding.JWTDecod(token);
+
+            return Ok(await services.GetReservationHistory(claims));
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("[Action]")]
-        public async Task<IActionResult> AddOrUpdateCarInReservation(DateTime StartTime, DateTime EndTime, int CarRentalId, int ClientId)
+        public async Task<IActionResult> GetReservationDetails(int id,[FromHeader] string token)
         {
-            return Ok(await services.AddOrUpdateCarInReservation(StartTime, EndTime, CarRentalId, ClientId));
-        }
+            var claims = await JWTDecoding.JWTDecod(token);
 
-        [HttpPost]
-        [Route("[Action]")]
-        public async Task<IActionResult> AddOrUpdateWeddingRoomInReservation(ReservationWeddingHallWithRoomDTO dto)
-        {
-            return Ok(await services.AddOrUpdateWeddingRoomInReservation(dto));
+            return Ok(await services.GetReservationDetails(id,claims));
         }
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> UpdateReservationPrice(int id)
+        public async Task<IActionResult> RemoveCarFromReservation(int id, [FromHeader] string token)
         {
-            await services.UpdateReservationPrice(id);
-            return Ok();
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+
+            return Ok(await services.RemoveCarFromReservation(id, userType));
         }
+
+        [HttpPut]
+        [Route("[Action]")]
+        public async Task<IActionResult> RemoveWeddingRoomFromReservation(int id, [FromHeader] string token)
+        {
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+
+            return Ok(await services.RemoveWeddingRoomFromReservation(id, userType));
+        }
+
+        [HttpPut]
+        [Route("[Action]")]
+        public async Task<IActionResult> Checkout(int id, [FromHeader] string token)
+        {
+            var claims = await JWTDecoding.JWTDecod(token);
+
+            return Ok(await services.Checkout(id, claims));
+        }
+
+
+        [HttpPost]
+        [Route("[Action]")]
+        public async Task<IActionResult> AddCarInReservation(DateTime StartTime, DateTime EndTime, int CarRentalId, int ClientId, [FromHeader] string token)
+        {
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.AddCarInReservation(StartTime, EndTime, CarRentalId, ClientId, userType));
+        }
+
+        [HttpPost]
+        [Route("[Action]")]
+        public async Task<IActionResult> AddWeddingRoomInReservation(ReservationWeddingHallWithRoomDTO dto, [FromHeader] string token)
+        {
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.AddWeddingRoomInReservation(dto, userType));
+        }
+
     }
 
 }

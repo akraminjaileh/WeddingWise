@@ -11,8 +11,7 @@ namespace WeddingWise_Core.DTO.Account
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime Birthday { get; set; }
-        public string? NationalNo { get; set; }
-        public UserType UserType { get; set; } = UserType.Client;
+
 
     }
 }

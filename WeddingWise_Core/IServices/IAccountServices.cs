@@ -1,4 +1,5 @@
-﻿using WeddingWise_Core.DTO.Account;
+﻿using System.IdentityModel.Tokens.Jwt;
+using WeddingWise_Core.DTO.Account;
 
 namespace WeddingWise_Core.IServices
 {
@@ -8,7 +9,7 @@ namespace WeddingWise_Core.IServices
         Task<int> Registration(RegistrationDTO dto);
         Task<string> Login(LoginDTO dto);
         // Task Logout(string refreshToken);
-        Task<int> UpdateProfile(UpdateProfileDTO dto, int id, string userType);
+        Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload token,int id);
         Task<int> DisableAccount(int id, string userType);
 
 

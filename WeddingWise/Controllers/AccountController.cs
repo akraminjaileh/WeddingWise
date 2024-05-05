@@ -30,7 +30,7 @@ namespace WeddingWise.Controllers
 
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> Login(LoginDTO dto)
+        public async Task<IActionResult> Login([FromForm]LoginDTO dto)
         {
 
             var affectedRows = await services.Login(dto);
@@ -40,29 +40,13 @@ namespace WeddingWise.Controllers
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> UpdateProfile(UpdateProfileDTO dto, int id,[FromHeader] string token)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileDTO dto, [FromHeader] string token,int id)
         {
-            try
-            {
-                var claims = await JWTDecoding.JWTDecod(token);
+            var claims = await JWTDecoding.JWTDecod(token);
 
-                var userType = claims.ElementAt(1).Value.ToString();
+            var affectedRows = await services.UpdateProfile(dto, claims,id);
+            return Ok(affectedRows);
 
-                var affectedRows = await services.UpdateProfile(dto, id, userType);
-                if (affectedRows > 0)
-                    return Ok(affectedRows);
-                else
-                    return NotFound("No user was updated, user not found.");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the user.");
-            }
         }
 
 

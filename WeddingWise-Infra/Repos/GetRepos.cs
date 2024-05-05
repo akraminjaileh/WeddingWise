@@ -1,12 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using WeddingWise_Core.Context;
-using WeddingWise_Core.DTO.CarRental;
-using WeddingWise_Core.DTO.ReservationCar;
-using WeddingWise_Core.DTO.ReservationWeddingHall;
-using WeddingWise_Core.DTO.Room;
-using WeddingWise_Core.DTO.User;
-using WeddingWise_Core.DTO.WeddingHall;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.Models.Entities;
 
@@ -31,9 +24,10 @@ namespace WeddingWise_Infra.Repos
 
             var user = await context.Users
                 .Include(u => u.AgentTransactions)
-                .Include(u => u.CarRentals)
-                .Include(u => u.WeddingHalls)
                 .Include(u => u.Reservations)
+                .Include(u => u.Reservations).ThenInclude(x => x.ReservationCars).ThenInclude(x => x.CarRental)
+                .Include(u => u.Reservations).ThenInclude(x => x.ReservationWeddingHalls).ThenInclude(x => x.WeddingHall)
+
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
@@ -43,7 +37,7 @@ namespace WeddingWise_Infra.Repos
             return user;
 
         }
-        
+
         #endregion
 
 
@@ -52,7 +46,7 @@ namespace WeddingWise_Infra.Repos
         public async Task<IEnumerable<CarRental>> GetAllCar()
         {
             return await context.CarRentals.ToListAsync();
-            
+
         }
 
         public async Task<CarRental> GetCarsDetails(int id)
@@ -70,7 +64,7 @@ namespace WeddingWise_Infra.Repos
             return cars;
 
         }
-        
+
         #endregion
 
 
@@ -78,7 +72,7 @@ namespace WeddingWise_Infra.Repos
         public async Task<IEnumerable<WeddingHall>> GetAllWedding()
         {
             return await context.WeddingHalls.ToListAsync();
-            
+
         }
 
         public async Task<WeddingHall> GetWeddingDetails(int id)

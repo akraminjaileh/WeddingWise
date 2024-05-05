@@ -158,7 +158,7 @@ namespace WeddingWise_Infra.Repos
 
         public async Task<IEnumerable<Reservation>> GetReservationHistory(int UserId)
         {
-            return await context.Reservations.ToListAsync();
+            return await context.Reservations.Where(x=>x.User.Id == UserId).ToListAsync();
 
         }
 

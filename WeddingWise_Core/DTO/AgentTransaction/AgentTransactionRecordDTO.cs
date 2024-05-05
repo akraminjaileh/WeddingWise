@@ -15,6 +15,7 @@ namespace WeddingWise_Core.DTO.AgentTransaction
         public decimal Amount { get; set; } 
         public decimal Fees { get; set; } 
         public Status Status { get; set; }
+        public DateTime CreationDate { get; set; }
 
     }
 }
