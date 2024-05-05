@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Room;
 using WeddingWise_Core.DTO.WeddingHall;
@@ -24,7 +23,7 @@ namespace WeddingWise.Controllers
 
 
         #region Car Management
-        
+
 
         [HttpPost]
         [Route("[Action]")]
@@ -32,7 +31,7 @@ namespace WeddingWise.Controllers
         {
             var claims = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.CreateCar(dto,claims));
+            return Ok(await services.CreateCar(dto, claims));
         }
 
         [HttpPut]
@@ -47,35 +46,42 @@ namespace WeddingWise.Controllers
 
         [HttpDelete]
         [Route("[Action]")]
-        public async Task<IActionResult> DeleteCar(int id)
+        public async Task<IActionResult> DeleteCar(int id, [FromHeader] string token)
         {
-            return Ok(await services.DeleteCar(id));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.DeleteCar(id, userType));
         }
 
         #endregion
 
 
         #region Wedding Management
-      
+
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> CreateWedding(CreateOrUpdateWeddingHallDTO dto)
+        public async Task<IActionResult> CreateWedding(CreateOrUpdateWeddingHallDTO dto, [FromHeader] string token)
         {
-            return Ok(await services.CreateWeddingHall(dto));
+            var claims = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.CreateWeddingHall(dto, claims));
         }
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> UpdateWedding(CreateOrUpdateWeddingHallDTO dto, int id)
+        public async Task<IActionResult> UpdateWedding(CreateOrUpdateWeddingHallDTO dto, int id, [FromHeader] string token)
         {
-            return Ok(await services.UpdateWeddingHall(dto, id, true));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.UpdateWeddingHall(dto, id, userType));
         }
 
         [HttpDelete]
         [Route("[Action]")]
-        public async Task<IActionResult> DeleteWedding(int id)
+        public async Task<IActionResult> DeleteWedding(int id, [FromHeader] string token)
         {
-            return Ok(await services.DeleteWeddingHall(id));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.DeleteWeddingHall(id, userType));
         }
 
         #endregion
@@ -84,26 +90,31 @@ namespace WeddingWise.Controllers
         #region Room Management
 
 
-        
+
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> CreateRoom(CreateOrUpdateRoom dto)
+        public async Task<IActionResult> CreateRoom(CreateOrUpdateRoom dto, [FromHeader] string token)
         {
-            return Ok(await services.CreateRoom(dto));
+            var claims = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.CreateRoom(dto, claims));
         }
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> UpdateRoom(CreateOrUpdateRoom dto, int id)
+        public async Task<IActionResult> UpdateRoom(CreateOrUpdateRoom dto, int id, [FromHeader] string token)
         {
-            return Ok(await services.UpdateRoom(dto, id, true));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.UpdateRoom(dto, id, userType));
         }
 
         [HttpDelete]
         [Route("[Action]")]
-        public async Task<IActionResult> DeleteRoom(int id)
+        public async Task<IActionResult> DeleteRoom(int id, [FromHeader] string token)
         {
-            return Ok(await services.DeleteRoom(id));
+            var claims = await JWTDecoding.JWTDecod(token);
+            var userType = claims.ElementAt(1).Value.ToString();
+            return Ok(await services.DeleteRoom(id, userType));
         }
 
         #endregion

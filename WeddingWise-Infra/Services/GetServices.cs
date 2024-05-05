@@ -42,8 +42,8 @@ namespace WeddingWise_Infra.Services
                             UserType = u.UserType,
                         });
                     }
-                   
-                        return result;
+
+                    return result;
                 }
                 throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
@@ -205,7 +205,7 @@ namespace WeddingWise_Infra.Services
                     PricePerHour = cars.PricePerHour,
                     Status = cars.Status
                 };
-                if(token.IsNullOrEmpty())
+                if (token.IsNullOrEmpty())
                 {
                     return dto;
                 }

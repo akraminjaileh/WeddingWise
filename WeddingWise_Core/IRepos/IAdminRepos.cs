@@ -1,8 +1,4 @@
-﻿using WeddingWise_Core.DTO.CarRental;
-using WeddingWise_Core.DTO.Room;
-using WeddingWise_Core.DTO.User;
-using WeddingWise_Core.DTO.WeddingHall;
-using WeddingWise_Core.Models.Entities;
+﻿using WeddingWise_Core.Models.Entities;
 namespace WeddingWise_Core.IRepos
 {
     public interface IAdminRepos
@@ -12,26 +8,26 @@ namespace WeddingWise_Core.IRepos
         void AddToDb(object obj);
         void UpdateOnDb(object obj);
         Task<int> SaveChangesAsync();
-      
+
+        //Get Agent Id for Create Car or Wedding
+        Task<int> GetAgentId(int AgentId);
 
 
         //CarRental Management
 
-        Task<int> CreateCar(int AgentId);
         Task<CarRental> UpdateCar(int id);
         Task<CarRental> DeleteCar(int id);
 
 
         //WeddingHall Management
-        Task<int> CreateWeddingHall(CreateOrUpdateWeddingHallDTO dto);
-        Task<int> UpdateWeddingHall(CreateOrUpdateWeddingHallDTO dto, int id, bool IsAdmin);
-        Task<int> DeleteWeddingHall(int id);
+
+        Task<WeddingHall> UpdateWeddingHall(int id);
+        Task<WeddingHall> DeleteWeddingHall(int id);
 
 
         //Room Management
-        Task<int> CreateRoom(CreateOrUpdateRoom dto);
-        Task<int> UpdateRoom(CreateOrUpdateRoom dto, int id, bool IsAdmin);
-        Task<int> DeleteRoom(int id);
+        Task<Room> UpdateRoom(int id);
+        Task<Room> DeleteRoom(int id);
 
 
 
