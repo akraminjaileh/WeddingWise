@@ -38,8 +38,9 @@ namespace WeddingWise_Infra.Services
                 }
 
                 var agentTrans = await repos.GetAllTransaction();
+                var agentIdRecord= agentTrans.Where(x => x.User.Id == userId);
                 var agentList = new List<AgentTransactionRecordDTO>();
-                foreach (var item in agentTrans)
+                foreach (var item in agentIdRecord)
                 {
                     var result = new AgentTransactionRecordDTO
                     {
@@ -62,7 +63,7 @@ namespace WeddingWise_Infra.Services
             }
         }
 
-       
+        
 
     }
 }

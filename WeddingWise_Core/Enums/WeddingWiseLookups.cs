@@ -12,11 +12,11 @@
         public enum SweetType
         {
             PremiumCake = 101,
-            Cake,
+            PremiumWarbat,
             PremiumKunafa,
             Kunafa,
             Warbat,
-            PremiumWarbat
+            Cake  
         }
 
         public enum BeverageType

@@ -89,16 +89,6 @@ namespace WeddingWise_Infra.Repos
             return !isUnavailable;
         }
 
-        public async Task<Reservation> UpdateReservationPrice(int reservationId)
-        {
-            var reservationCarOrWedding = await context.Reservations.FindAsync(reservationId);
-            if (reservationCarOrWedding == null)
-            {
-                throw new KeyNotFoundException($"Reservation with ID {reservationCarOrWedding} not found.");
-            }
-            return reservationCarOrWedding;
-
-        }
 
         #endregion
 
@@ -134,23 +124,27 @@ namespace WeddingWise_Infra.Repos
             return room;
         }
 
-        public async Task<ReservationCar> RemoveCarFromReservation(int id)
+        public async Task<ReservationCar> RemoveCarFromReservation(int reservationCarId , int reservationId)
         {
-            var reservationCars = await context.ReservationCars.FirstOrDefaultAsync(x => x.Id == id);
+            var reservationCars = await context.ReservationCars
+                .Where(x => x.Reservation.Id == reservationId)
+                .FirstOrDefaultAsync(x => x.Id == reservationCarId);
             if (reservationCars == null)
             {
-                throw new KeyNotFoundException($"ReservationCars with ID {id} not found.");
+                throw new KeyNotFoundException($"Reservation Cars with not found.");
             }
 
             return reservationCars;
         }
 
-        public async Task<ReservationWeddingHall> RemoveWeddingRoomFromReservation(int id)
+        public async Task<ReservationWeddingHall> RemoveWeddingRoomFromReservation(int reservationWeddingId, int reservationId)
         {
-            var reservationWedding = await context.ReservationWeddingHalls.FirstOrDefaultAsync(x => x.Id == id);
+            var reservationWedding = await context.ReservationWeddingHalls
+                .Where(x=>x.Reservation.Id == reservationId)
+                .FirstOrDefaultAsync(x => x.Id == reservationWeddingId);
             if (reservationWedding == null)
             {
-                throw new KeyNotFoundException($"ReservationWedding with ID {id} not found.");
+                throw new KeyNotFoundException($"Reservation Wedding not found.");
             }
 
             return reservationWedding;
@@ -162,16 +156,17 @@ namespace WeddingWise_Infra.Repos
 
         }
 
-        public async Task<Reservation> GetReservationDetails(int id)
+        public async Task<Reservation> GetReservationDetails(int reservationId , int userId)
         {
             var reservation = await context.Reservations
                 .Include(x => x.ReservationCars).ThenInclude(x => x.CarRental)
                 .Include(x => x.ReservationWeddingHalls).ThenInclude(x => x.WeddingHall)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .Where(x=>x.User.Id ==userId)
+                .FirstOrDefaultAsync(x => x.Id == reservationId);
 
             if (reservation == null)
             {
-                throw new KeyNotFoundException($"Reservation with ID {id} not found.");
+                throw new KeyNotFoundException($"Reservation with ID {reservationId} not found.");
             }
 
             return reservation;

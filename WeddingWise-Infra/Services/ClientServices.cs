@@ -41,31 +41,43 @@ namespace WeddingWise_Infra.Services
 
         public async Task UpdateReservationPrice(int reservationId)
         {
-            var reservation = await repos.UpdateReservationPrice(reservationId);
+            var reservation = await repos.GetReservationById(reservationId);
 
             if (reservation != null && (reservation.ReservationCars != null || reservation.ReservationWeddingHalls != null))
             {
 
 
-                float totalNetPriceCar = reservation.ReservationCars.Sum(car =>
+                float totalNetPriceCar = reservation.ReservationCars
+                    .Sum(car =>
                 {
                     var hours = (car.EndTime - car.StartTime).TotalHours;
                     return (float)hours * car.CarRental.PricePerHour;
                 });
 
-                float totalNetPriceWedding = reservation.ReservationWeddingHalls.Sum(wedding =>
+                float totalNetPriceWedding = reservation.ReservationWeddingHalls
+                    .Sum(wedding =>
                 {
                     var hours = (wedding.EndTime - wedding.StartTime).TotalHours;
-                    return (float)hours * wedding.Room.StartPrice;
+                    float normalSweetPrice = 0.7f;  //change if you need
+                    float premiumSweetPrice = 1.4f; //change if you need
+                    float servicesPrice = 0;
+
+                    if (wedding.SweetType.ToString().ToLower().Contains("premium"))
+                    {
+                        servicesPrice = premiumSweetPrice * wedding.GuestCount;
+                    }
+                    servicesPrice = normalSweetPrice * wedding.GuestCount;
+
+                    return ((float)hours * wedding.Room.StartPrice) + servicesPrice;
 
                 });
-                float netPrice =  totalNetPriceWedding + totalNetPriceCar;
+                float netPrice = totalNetPriceWedding + totalNetPriceCar;
                 reservation.NetPrice = netPrice;
-                float tax =  0.16f * netPrice;
+                float tax = 0.16f * netPrice;
                 reservation.TaxAmount = tax;
                 reservation.TotalPrice = netPrice + tax;
                 repos.UpdateOnDb(reservation);
-                await repos.SaveChangesAsync();
+
             }
         }
 
@@ -76,45 +88,56 @@ namespace WeddingWise_Infra.Services
 
         #region Reservation Action
 
-        public async Task<int> AddCarInReservation
-            (DateTime StartTime, DateTime EndTime, int CarRentalId, int ClientId, string token)
+        public async Task<int> AddCarInReservation(ReservationCarDTO dto, JwtPayload payload)
         {
 
             try
             {
-                if (!token.Equals(UserType.Client.ToString()))
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+                int userId;
+
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
                 }
 
-                var car = await repos.AddCarInReservation(CarRentalId);
+                var car = await repos.AddCarInReservation(dto.CarRentalId);
 
                 if (car.Status.HasFlag(Status.NotAvailable))
                 {
                     throw new KeyNotFoundException($"This Car is Not Available Now");
                 }
 
-                if (await repos.IsCarAvailable(CarRentalId, StartTime, EndTime))
+                if (await repos.IsCarAvailable(dto.CarRentalId, dto.StartTime, dto.EndTime))
                 {
                     var carInReservation = new ReservationCar()
                     {
-                        StartTime = StartTime,
-                        EndTime = EndTime,
+                        StartTime = dto.StartTime,
+                        EndTime = dto.EndTime,
                         CarRental = car,
                     };
 
-                    var reservationId = await OpenNewReservation(ClientId);
+                    var reservationId = await OpenNewReservation(userId);
 
-                    var existingReservation = await repos.GetReservationDetails(reservationId);
+                    var existingReservation = await repos.GetReservationById(reservationId);
 
 
                     carInReservation.Reservation = existingReservation;
 
                     car.ReservationCars.Add(carInReservation);
                     repos.AddToDb(carInReservation);
-                    int effectedRows = await repos.SaveChangesAsync();
                     await UpdateReservationPrice(reservationId);
-                    return effectedRows;
+                    return await repos.SaveChangesAsync();
+
                 }
 
 
@@ -129,15 +152,28 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<int> AddWeddingRoomInReservation(ReservationWeddingHallWithRoomDTO dto, string token)
+        public async Task<int> AddWeddingRoomInReservation(ReservationWeddingHallWithRoomDTO dto, JwtPayload payload)
         {
 
             try
             {
-                if (!token.Equals(UserType.Client.ToString()))
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+                int userId;
+
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
                 }
+
                 var room = await repos.AddWeddingRoomInReservation(dto.RoomId);
 
                 if (room.Status.HasFlag(Status.NotAvailable))
@@ -159,10 +195,9 @@ namespace WeddingWise_Infra.Services
                     roomInReservation.WeddingHall = room.WeddingHall;
                     roomInReservation.Room = room;
 
-                    var reservationId = await OpenNewReservation(dto.ClientId);
+                    var reservationId = await OpenNewReservation(userId);
 
-                    var existingReservation = await repos.GetReservationDetails(reservationId);
-
+                    var existingReservation = await repos.GetReservationById(reservationId);
 
                     roomInReservation.Reservation = existingReservation;
 
@@ -173,15 +208,9 @@ namespace WeddingWise_Infra.Services
                     {
                         throw new KeyNotFoundException("The room you chose does not belong to the Hall");
                     }
+                    await UpdateReservationPrice(reservationId);
+                    return await repos.SaveChangesAsync();
 
-                    int effectedRows = await repos.SaveChangesAsync();
-
-                    if (effectedRows > 0)
-                    {
-                        await UpdateReservationPrice(reservationId);
-                    }
-
-                    return effectedRows;
                 }
 
 
@@ -197,64 +226,83 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> RemoveCarFromReservation(int id, string token)
+        public async Task<int> RemoveCarFromReservation(int reservationId, int reservationCarId, JwtPayload payload)
         {
             try
             {
-                if (!token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
-                {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-
-                }
-                var carReservation = await repos.RemoveCarFromReservation(id);
-                repos.DeleteFromDb(carReservation);
-                var affectedRows = await repos.SaveChangesAsync();
-                await UpdateReservationPrice(id);
-                return affectedRows;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred.", ex);
-            }
-        }
-
-        public async Task<int> RemoveWeddingRoomFromReservation(int id, string token)
-        {
-            try
-            {
-                if (!token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
-                {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-
-                }
-                var weddingReservation = await repos.RemoveWeddingRoomFromReservation(id);
-                repos.DeleteFromDb(weddingReservation);
-                var affectedRows = await repos.SaveChangesAsync();
-                UpdateReservationPrice(id);
-                return  affectedRows;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred.", ex);
-            }
-
-        }
-
-
-        public async Task<IEnumerable<ReservationRecordDTO>> GetReservationHistory(JwtPayload token)
-        {
-            try
-            {
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+       
+                var userType = payload["UserType"].ToString();
 
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
+                {
+                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
-                string userType = token.ElementAt(1).Value.ToString();
+                }
 
-                if (!userType.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                var carReservation = await repos.RemoveCarFromReservation(reservationCarId, reservationId);
+                repos.DeleteFromDb(carReservation);
+                await UpdateReservationPrice(reservationId);
+
+                return await repos.SaveChangesAsync(); ;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred.", ex);
+            }
+        }
+
+        public async Task<int> RemoveWeddingRoomFromReservation(int reservationId, int reservationWeddingId, JwtPayload payload)
+        {
+            try
+            {
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+ 
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
+                {
+                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
+                }
+                var weddingReservation = await repos.RemoveWeddingRoomFromReservation(reservationWeddingId, reservationId);
+
+                repos.DeleteFromDb(weddingReservation);
+                await UpdateReservationPrice(reservationId);
+
+                return await repos.SaveChangesAsync(); ;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred.", ex);
+            }
+
+        }
+
+
+        public async Task<IEnumerable<ReservationRecordDTO>> GetReservationHistory(JwtPayload payload)
+        {
+            try
+            {
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+                int userId;
+
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
@@ -283,25 +331,29 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<ReservationDetailsDTO> GetReservationDetails(int id, JwtPayload token)
+        public async Task<ReservationDetailsDTO> GetReservationDetails(int reservationId, JwtPayload payload)
         {
             try
             {
-                if (token == null || !token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+                int userId;
 
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
 
-                string userType = token.ElementAt(1).Value.ToString();
+                var userType = payload["UserType"].ToString();
 
-                if (!userType.Equals(UserType.Client.ToString()))
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
                 }
 
-                var reservation = await repos.GetReservationDetails(id);
+                var reservation = await repos.GetReservationDetails(reservationId,userId);
+                
                 var reservationDetailsDTO = new ReservationDetailsDTO()
                 {
                     NetPrice = reservation.NetPrice,
@@ -345,19 +397,23 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> Checkout(int id, JwtPayload token)
+        public async Task<int> Checkout(int id, JwtPayload payload)
         {
             try
             {
 
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+                int userId;
 
-                string userType = token.ElementAt(1).Value.ToString();
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
 
-                if (!userType.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
@@ -365,7 +421,7 @@ namespace WeddingWise_Infra.Services
 
                 var reservation = await repos.Checkout(id);
 
-                reservation.Status = Status.Completed;
+                reservation.Status = Status.Confirmed;
                 repos.UpdateOnDb(reservation);
                 var affectedRows = await repos.SaveChangesAsync();
                 return affectedRows;

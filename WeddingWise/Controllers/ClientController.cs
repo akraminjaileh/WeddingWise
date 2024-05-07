@@ -36,24 +36,24 @@ namespace WeddingWise.Controllers
             return Ok(await services.GetReservationDetails(id,claims));
         }
 
-        [HttpPut]
+        [HttpDelete]
         [Route("[Action]")]
-        public async Task<IActionResult> RemoveCarFromReservation(int id, [FromHeader] string token)
+        public async Task<IActionResult> RemoveCarFromReservation(int reservationId, int reservationCarId, [FromHeader] string token)
         {
             var claims = await JWTDecoding.JWTDecod(token);
             var userType = claims.ElementAt(1).Value.ToString();
 
-            return Ok(await services.RemoveCarFromReservation(id, userType));
+            return Ok(await services.RemoveCarFromReservation(reservationId,reservationCarId, userType));
         }
 
-        [HttpPut]
+        [HttpDelete]
         [Route("[Action]")]
-        public async Task<IActionResult> RemoveWeddingRoomFromReservation(int id, [FromHeader] string token)
+        public async Task<IActionResult> RemoveWeddingRoomFromReservation(int reservationId, int reservationWeddingId, [FromHeader] string token)
         {
             var claims = await JWTDecoding.JWTDecod(token);
             var userType = claims.ElementAt(1).Value.ToString();
 
-            return Ok(await services.RemoveWeddingRoomFromReservation(id, userType));
+            return Ok(await services.RemoveWeddingRoomFromReservation(reservationId,reservationWeddingId, userType));
         }
 
         [HttpPut]
@@ -77,7 +77,7 @@ namespace WeddingWise.Controllers
 
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> AddWeddingRoomInReservation(ReservationWeddingHallWithRoomDTO dto, [FromHeader] string token)
+        public async Task<IActionResult> AddWeddingRoomInReservation([FromForm]ReservationWeddingHallWithRoomDTO dto, [FromHeader] string token)
         {
             var claims = await JWTDecoding.JWTDecod(token);
             var userType = claims.ElementAt(1).Value.ToString();

@@ -6,7 +6,7 @@ namespace WeddingWise_Core.IRepos
     {
         //Reservation Assist
         Task<User> OpenNewReservation(int id);
-        Task<Reservation> UpdateReservationPrice(int reservationId);
+        Task<Reservation> GetReservationById(int id);
         Task<bool> IsCarAvailable(int carId, DateTime startTime, DateTime endTime);
         Task<bool> IsRoomAvailable(int roomId, DateTime startTime, DateTime endTime);
 
@@ -18,11 +18,11 @@ namespace WeddingWise_Core.IRepos
 
         //Reservation Action
         Task<IEnumerable<Reservation>> GetReservationHistory(int UserId);
-        Task<Reservation> GetReservationDetails(int id);
+        Task<Reservation> GetReservationDetails(int reservationId, int userId);
         Task<CarRental> AddCarInReservation(int id);
         Task<Room> AddWeddingRoomInReservation(int id);
-        Task<ReservationCar> RemoveCarFromReservation(int id);
-        Task<ReservationWeddingHall> RemoveWeddingRoomFromReservation(int id);
+        Task<ReservationCar> RemoveCarFromReservation(int reservationCarId, int reservationId);
+        Task<ReservationWeddingHall> RemoveWeddingRoomFromReservation(int reservationWeddingId, int reservationId);
         Task<Reservation> Checkout(int id);
 
     }
