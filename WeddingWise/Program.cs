@@ -1,8 +1,11 @@
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WeddingWise;
 using WeddingWise.ServicesReposConfig;
 using WeddingWise_Core.Context;
+using WeddingWise_Core.IRepos;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,6 +27,13 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddSwaggerGenSerilog();
 
+//Hangfire Configure
+builder.Services
+
+        .AddHangfire(configuration => configuration
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
 
 
 //Configure Services and Repos
@@ -46,6 +56,13 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseSerilogRequestLogging();
+
+//Hangfire Configure
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+RecurringJob.AddOrUpdate<IClientRepos>("update-reservation-statuses",
+       service => service.RefreshReservationStatus(), Cron.MinuteInterval(1));
+
 
 app.UseHttpsRedirection();
 

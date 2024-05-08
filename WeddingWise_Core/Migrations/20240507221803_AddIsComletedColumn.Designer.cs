@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240507221803_AddIsComletedColumn")]
+    partial class AddIsComletedColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 866, DateTimeKind.Local).AddTicks(8651));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 391, DateTimeKind.Local).AddTicks(7174));
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -67,7 +70,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions", null, t =>
+                    b.ToTable("Transactions", t =>
                         {
                             t.HasCheckConstraint("CH_AgentTransaction_Balance", "Balance >= 0");
 
@@ -111,7 +114,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 867, DateTimeKind.Local).AddTicks(1089));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 392, DateTimeKind.Local).AddTicks(914));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -164,7 +167,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CarRentals", null, t =>
+                    b.ToTable("CarRentals", t =>
                         {
                             t.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) >= 3");
 
@@ -191,7 +194,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 867, DateTimeKind.Local).AddTicks(8583));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 393, DateTimeKind.Local).AddTicks(3848));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -239,7 +242,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations", null, t =>
+                    b.ToTable("Reservations", t =>
                         {
                             t.HasCheckConstraint("CH_Reservation_NetPrice", "NetPrice >= 0");
 
@@ -282,7 +285,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("ReservationCars", null, t =>
+                    b.ToTable("ReservationCars", t =>
                         {
                             t.HasCheckConstraint("CH_ReservationCar_EndTime", "EndTime > StartTime");
 
@@ -335,7 +338,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("WeddingHallId");
 
-                    b.ToTable("ReservationWeddingHalls", null, t =>
+                    b.ToTable("ReservationWeddingHalls", t =>
                         {
                             t.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102");
 
@@ -360,7 +363,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 868, DateTimeKind.Local).AddTicks(5298));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 394, DateTimeKind.Local).AddTicks(7031));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -402,7 +405,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("WeddingHallId");
 
-                    b.ToTable("Rooms", null, t =>
+                    b.ToTable("Rooms", t =>
                         {
                             t.HasCheckConstraint("CH_Room_RoomName", "LEN(RoomName) > 3");
 
@@ -436,7 +439,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 873, DateTimeKind.Local).AddTicks(7830));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 405, DateTimeKind.Local).AddTicks(1280));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -484,7 +487,7 @@ namespace WeddingWise_Core.Migrations
                     b.HasIndex("Phone")
                         .IsUnique();
 
-                    b.ToTable("Users", null, t =>
+                    b.ToTable("Users", t =>
                         {
                             t.HasCheckConstraint("CH_User_Birthday", "DATEADD(YEAR, 16, Birthday) <= SYSDATETIME()");
 
@@ -523,7 +526,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 8, 2, 31, 15, 874, DateTimeKind.Local).AddTicks(2864));
+                        .HasDefaultValue(new DateTime(2024, 5, 8, 1, 18, 3, 407, DateTimeKind.Local).AddTicks(2064));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -551,7 +554,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WeddingHalls", null, t =>
+                    b.ToTable("WeddingHalls", t =>
                         {
                             t.HasCheckConstraint("CH_WeddingHall_City", "City BETWEEN 101 AND 104");
 

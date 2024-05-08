@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WeddingWise_Core.DTO.ReservationCar;
 using WeddingWise_Core.DTO.ReservationWeddingHall;
 using WeddingWise_Core.Helper;
 using WeddingWise_Core.IServices;
@@ -22,66 +23,62 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> GetReservationHistory([FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetReservationHistory(claims));
+            return Ok(await services.GetReservationHistory(payload));
         }
 
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetReservationDetails(int id,[FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetReservationDetails(id,claims));
+            return Ok(await services.GetReservationDetails(id,payload));
         }
 
         [HttpDelete]
         [Route("[Action]")]
         public async Task<IActionResult> RemoveCarFromReservation(int reservationId, int reservationCarId, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.RemoveCarFromReservation(reservationId,reservationCarId, userType));
+            return Ok(await services.RemoveCarFromReservation(reservationId,reservationCarId, payload));
         }
 
         [HttpDelete]
         [Route("[Action]")]
         public async Task<IActionResult> RemoveWeddingRoomFromReservation(int reservationId, int reservationWeddingId, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.RemoveWeddingRoomFromReservation(reservationId,reservationWeddingId, userType));
+            return Ok(await services.RemoveWeddingRoomFromReservation(reservationId,reservationWeddingId, payload));
         }
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> Checkout(int id, [FromHeader] string token)
+        public async Task<IActionResult> Checkout(int reservationId, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.Checkout(id, claims));
+            return Ok(await services.Checkout(reservationId, payload));
         }
 
 
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> AddCarInReservation(DateTime StartTime, DateTime EndTime, int CarRentalId, int ClientId, [FromHeader] string token)
+        public async Task<IActionResult> AddCarInReservation(ReservationCarDTO dto, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.AddCarInReservation(StartTime, EndTime, CarRentalId, ClientId, userType));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.AddCarInReservation(dto , payload));
         }
 
         [HttpPost]
         [Route("[Action]")]
         public async Task<IActionResult> AddWeddingRoomInReservation([FromForm]ReservationWeddingHallWithRoomDTO dto, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.AddWeddingRoomInReservation(dto, userType));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.AddWeddingRoomInReservation(dto, payload));
         }
 
     }

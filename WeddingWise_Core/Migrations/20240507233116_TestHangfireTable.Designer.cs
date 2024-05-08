@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240507233116_TestHangfireTable")]
+    partial class TestHangfireTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Transactions", null, t =>
+                    b.ToTable("Transactions", t =>
                         {
                             t.HasCheckConstraint("CH_AgentTransaction_Balance", "Balance >= 0");
 
@@ -164,7 +167,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CarRentals", null, t =>
+                    b.ToTable("CarRentals", t =>
                         {
                             t.HasCheckConstraint("CH_CarRental_Brand", "LEN(Brand) >= 3");
 
@@ -239,7 +242,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations", null, t =>
+                    b.ToTable("Reservations", t =>
                         {
                             t.HasCheckConstraint("CH_Reservation_NetPrice", "NetPrice >= 0");
 
@@ -282,7 +285,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("ReservationCars", null, t =>
+                    b.ToTable("ReservationCars", t =>
                         {
                             t.HasCheckConstraint("CH_ReservationCar_EndTime", "EndTime > StartTime");
 
@@ -335,7 +338,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("WeddingHallId");
 
-                    b.ToTable("ReservationWeddingHalls", null, t =>
+                    b.ToTable("ReservationWeddingHalls", t =>
                         {
                             t.HasCheckConstraint("CH_ReservationWeddingHall_BeverageType", "BeverageType BETWEEN 101 AND 102");
 
@@ -402,7 +405,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("WeddingHallId");
 
-                    b.ToTable("Rooms", null, t =>
+                    b.ToTable("Rooms", t =>
                         {
                             t.HasCheckConstraint("CH_Room_RoomName", "LEN(RoomName) > 3");
 
@@ -484,7 +487,7 @@ namespace WeddingWise_Core.Migrations
                     b.HasIndex("Phone")
                         .IsUnique();
 
-                    b.ToTable("Users", null, t =>
+                    b.ToTable("Users", t =>
                         {
                             t.HasCheckConstraint("CH_User_Birthday", "DATEADD(YEAR, 16, Birthday) <= SYSDATETIME()");
 
@@ -551,7 +554,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WeddingHalls", null, t =>
+                    b.ToTable("WeddingHalls", t =>
                         {
                             t.HasCheckConstraint("CH_WeddingHall_City", "City BETWEEN 101 AND 104");
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 using WeddingWise_Infra.Repos;
@@ -21,9 +20,7 @@ namespace WeddingWise.ServicesReposConfig
             services.AddScoped<IClientRepos, ClientRepos>();
             services.AddScoped<IAgentRepos, AgentRepos>();
             services.AddScoped<IAgentServices, AgentServices>();
-            
+
         }
-
-
     }
 }

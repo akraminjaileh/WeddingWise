@@ -64,13 +64,13 @@ namespace WeddingWise_Infra.Repos
 
         public async Task<bool> IsCarAvailable(int carId, DateTime startTime, DateTime endTime)
         {
-            bool isUnavailable = await context.ReservationCars.AnyAsync(r =>
-                r.CarRental.Id == carId &&
-                r.Reservation.Status.HasFlag(Status.Confirmed) &&
+            bool isUnavailable = await context.ReservationCars
+                .AnyAsync(r =>
+                  r.CarRental.Id == carId &&
+                  r.IsCompleted ||
                 ((r.StartTime <= endTime && r.StartTime >= startTime) ||
                  (r.EndTime >= startTime && r.EndTime <= endTime) ||
-                 (r.StartTime <= startTime && r.EndTime >= endTime))
-                 );
+                 (r.StartTime <= startTime && r.EndTime >= endTime)));
 
             return !isUnavailable;
         }
@@ -80,7 +80,7 @@ namespace WeddingWise_Infra.Repos
         {
             bool isUnavailable = await context.ReservationWeddingHalls.AnyAsync(r =>
                 r.Room.Id == roomId &&
-                r.Reservation.Status.HasFlag(Status.Confirmed) &&
+                r.IsCompleted ||
                 ((r.StartTime <= endTime && r.StartTime >= startTime) ||
                  (r.EndTime >= startTime && r.EndTime <= endTime) ||
                  (r.StartTime <= startTime && r.EndTime >= endTime))
@@ -89,6 +89,29 @@ namespace WeddingWise_Infra.Repos
             return !isUnavailable;
         }
 
+        public async Task RefreshReservationStatus()
+        {
+            var carReservation = context.ReservationCars;
+            var weddingReservation = context.ReservationWeddingHalls;
+            foreach (var item in carReservation)
+            {
+                if (item.EndTime <= DateTime.Now)
+                {
+                    item.IsCompleted=true;
+                   await context.SaveChangesAsync();
+                    
+                }
+            }
+
+            foreach (var item in weddingReservation)
+            {
+                if (item.EndTime <= DateTime.Now)
+                {
+                    item.IsCompleted = true;
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
 
         #endregion
 
@@ -124,7 +147,7 @@ namespace WeddingWise_Infra.Repos
             return room;
         }
 
-        public async Task<ReservationCar> RemoveCarFromReservation(int reservationCarId , int reservationId)
+        public async Task<ReservationCar> RemoveCarFromReservation(int reservationCarId, int reservationId)
         {
             var reservationCars = await context.ReservationCars
                 .Where(x => x.Reservation.Id == reservationId)
@@ -140,7 +163,7 @@ namespace WeddingWise_Infra.Repos
         public async Task<ReservationWeddingHall> RemoveWeddingRoomFromReservation(int reservationWeddingId, int reservationId)
         {
             var reservationWedding = await context.ReservationWeddingHalls
-                .Where(x=>x.Reservation.Id == reservationId)
+                .Where(x => x.Reservation.Id == reservationId)
                 .FirstOrDefaultAsync(x => x.Id == reservationWeddingId);
             if (reservationWedding == null)
             {
@@ -152,16 +175,16 @@ namespace WeddingWise_Infra.Repos
 
         public async Task<IEnumerable<Reservation>> GetReservationHistory(int UserId)
         {
-            return await context.Reservations.Where(x=>x.User.Id == UserId).ToListAsync();
+            return await context.Reservations.Where(x => x.User.Id == UserId).ToListAsync();
 
         }
 
-        public async Task<Reservation> GetReservationDetails(int reservationId , int userId)
+        public async Task<Reservation> GetReservationDetails(int reservationId, int userId)
         {
             var reservation = await context.Reservations
                 .Include(x => x.ReservationCars).ThenInclude(x => x.CarRental)
                 .Include(x => x.ReservationWeddingHalls).ThenInclude(x => x.WeddingHall)
-                .Where(x=>x.User.Id ==userId)
+                .Where(x => x.User.Id == userId)
                 .FirstOrDefaultAsync(x => x.Id == reservationId);
 
             if (reservation == null)

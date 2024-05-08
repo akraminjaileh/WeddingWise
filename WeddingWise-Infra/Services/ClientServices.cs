@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Hangfire;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.Reservation;
 using WeddingWise_Core.DTO.ReservationCar;
@@ -397,7 +398,7 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> Checkout(int id, JwtPayload payload)
+        public async Task<int> Checkout(int reservationId, JwtPayload payload)
         {
             try
             {
@@ -419,7 +420,7 @@ namespace WeddingWise_Infra.Services
 
                 }
 
-                var reservation = await repos.Checkout(id);
+                var reservation = await repos.Checkout(reservationId);
 
                 reservation.Status = Status.Confirmed;
                 repos.UpdateOnDb(reservation);

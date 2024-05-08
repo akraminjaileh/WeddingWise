@@ -13,8 +13,8 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.Property(x => x.Id).UseIdentityColumn();
 
             //Nullable(is Not Null By Default) and Default value Config
-            builder.Property(x => x.IsActive).HasDefaultValue(true);
-            builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.IsCompleted).HasDefaultValue(false);
+          
 
             //Check Constraint
             builder.ToTable(x =>
