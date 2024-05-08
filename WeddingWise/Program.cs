@@ -6,6 +6,7 @@ using WeddingWise;
 using WeddingWise.ServicesReposConfig;
 using WeddingWise_Core.Context;
 using WeddingWise_Core.IRepos;
+using WeddingWise_Core.IServices;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -60,8 +61,8 @@ app.UseSerilogRequestLogging();
 //Hangfire Configure
 app.UseHangfireDashboard();
 app.UseHangfireServer();
-RecurringJob.AddOrUpdate<IClientRepos>("update-reservation-statuses",
-       service => service.RefreshReservationStatus(), Cron.MinuteInterval(1));
+RecurringJob.AddOrUpdate<IClientServices>("update-reservation-statuses",
+       service => service.RefreshReservationStatus(), Cron.MinuteInterval(3));
 
 
 app.UseHttpsRedirection();

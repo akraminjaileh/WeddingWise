@@ -89,29 +89,12 @@ namespace WeddingWise_Infra.Repos
             return !isUnavailable;
         }
 
-        public async Task RefreshReservationStatus()
+        public IEnumerable<Reservation> GetPendingReservation()
         {
-            var carReservation = context.ReservationCars;
-            var weddingReservation = context.ReservationWeddingHalls;
-            foreach (var item in carReservation)
-            {
-                if (item.EndTime <= DateTime.Now)
-                {
-                    item.IsCompleted=true;
-                   await context.SaveChangesAsync();
-                    
-                }
-            }
-
-            foreach (var item in weddingReservation)
-            {
-                if (item.EndTime <= DateTime.Now)
-                {
-                    item.IsCompleted = true;
-                    await context.SaveChangesAsync();
-                }
-            }
+            return context.Reservations
+                   .Where(x => x.Status == Status.Confirmed);
         }
+
 
         #endregion
 

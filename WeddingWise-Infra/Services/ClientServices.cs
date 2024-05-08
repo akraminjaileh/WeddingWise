@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.Reservation;
@@ -82,7 +83,44 @@ namespace WeddingWise_Infra.Services
             }
         }
 
+        public async Task RefreshReservationStatus()
+        {
 
+            var reservations = repos.GetPendingReservation();
+
+            foreach (var reservation in reservations)
+            {
+                var carReservations = reservation.ReservationCars
+                      .Where(x => x.Reservation.Id == reservation.Id);
+
+                foreach (var carReservation in carReservations)
+                {
+                    if (carReservation.EndTime <= DateTime.Now)
+                    {
+                        carReservation.IsCompleted = true;
+                        await repos.SaveChangesAsync();
+                    }
+                }
+                var weddingReservations = reservation.ReservationWeddingHalls
+                     .Where(x => x.Reservation.Id == reservation.Id);
+
+                foreach (var weddingReservation in weddingReservations)
+                {
+                    if (weddingReservation.EndTime <= DateTime.Now)
+                    {
+                        weddingReservation.IsCompleted = true;
+                        await repos.SaveChangesAsync();
+                    }
+                }
+                if (weddingReservations.All(x => x.IsCompleted == true) && carReservations.All(x => x.IsCompleted == true))
+                {
+                    reservation.Status = Status.Completed;
+                    await repos.SaveChangesAsync();
+                }
+
+            }
+
+        }
 
         #endregion
 

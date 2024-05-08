@@ -10,6 +10,7 @@ namespace WeddingWise_Core.IServices
         //Reservation Assist
         Task<int> OpenNewReservation(int id);
         Task UpdateReservationPrice(int reservationId);
+        Task RefreshReservationStatus();
 
         //Reservation Action
 

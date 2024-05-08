@@ -9,7 +9,7 @@ namespace WeddingWise_Core.IRepos
         Task<Reservation> GetReservationById(int id);
         Task<bool> IsCarAvailable(int carId, DateTime startTime, DateTime endTime);
         Task<bool> IsRoomAvailable(int roomId, DateTime startTime, DateTime endTime);
-        Task RefreshReservationStatus();
+        IEnumerable<Reservation> GetPendingReservation();
 
         //DataBase Modify
         Task<int> SaveChangesAsync();
