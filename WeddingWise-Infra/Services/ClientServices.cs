@@ -1,10 +1,9 @@
-﻿using Hangfire;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.Reservation;
 using WeddingWise_Core.DTO.ReservationCar;
 using WeddingWise_Core.DTO.ReservationWeddingHall;
+using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 using WeddingWise_Core.Models.Entities;
@@ -15,15 +14,20 @@ namespace WeddingWise_Infra.Services
     public class ClientServices : IClientServices
     {
         private readonly IClientRepos repos;
+        private readonly IDbRepos dbRepos;
 
-        public ClientServices(IClientRepos repos) => this.repos = repos;
+        public ClientServices(IClientRepos repos , IDbRepos dbRepos)
+        {
+            this.repos = repos;
+            this.dbRepos = dbRepos;
+        }
 
 
         #region Reservation Assist 
 
-        public async Task<int> OpenNewReservation(int id)
+        public async Task<int> OpenNewReservation(int userId)
         {
-            var client = await repos.OpenNewReservation(id);
+            var client = await repos.OpenNewReservation(userId);
 
             if (!client.UserType.HasFlag(UserType.Client))
             {
@@ -36,8 +40,8 @@ namespace WeddingWise_Infra.Services
             }
 
             var newReservation = new Reservation { User = client };
-            repos.AddToDb(newReservation);
-            await repos.SaveChangesAsync();
+            dbRepos.AddToDb(newReservation);
+            await dbRepos.SaveChangesAsync();
             return newReservation.Id;
         }
 
@@ -45,7 +49,7 @@ namespace WeddingWise_Infra.Services
         {
             var reservation = await repos.GetReservationById(reservationId);
 
-            if (reservation != null && (reservation.ReservationCars != null || reservation.ReservationWeddingHalls != null))
+            if (reservation.ReservationCars != null || reservation.ReservationWeddingHalls != null)
             {
 
 
@@ -78,14 +82,14 @@ namespace WeddingWise_Infra.Services
                 float tax = 0.16f * netPrice;
                 reservation.TaxAmount = tax;
                 reservation.TotalPrice = netPrice + tax;
-                repos.UpdateOnDb(reservation);
+                dbRepos.UpdateOnDb(reservation);
 
             }
         }
 
         public async Task RefreshReservationStatus()
         {
-
+            return;
             var reservations = repos.GetPendingReservation();
 
             foreach (var reservation in reservations)
@@ -98,7 +102,7 @@ namespace WeddingWise_Infra.Services
                     if (carReservation.EndTime <= DateTime.Now)
                     {
                         carReservation.IsCompleted = true;
-                        await repos.SaveChangesAsync();
+                        await dbRepos.SaveChangesAsync();
                     }
                 }
                 var weddingReservations = reservation.ReservationWeddingHalls
@@ -109,18 +113,21 @@ namespace WeddingWise_Infra.Services
                     if (weddingReservation.EndTime <= DateTime.Now)
                     {
                         weddingReservation.IsCompleted = true;
-                        await repos.SaveChangesAsync();
+                        await dbRepos.SaveChangesAsync();
                     }
                 }
                 if (weddingReservations.All(x => x.IsCompleted == true) && carReservations.All(x => x.IsCompleted == true))
                 {
                     reservation.Status = Status.Completed;
-                    await repos.SaveChangesAsync();
+                    await dbRepos.SaveChangesAsync();
                 }
 
             }
 
         }
+
+
+
 
         #endregion
 
@@ -173,9 +180,9 @@ namespace WeddingWise_Infra.Services
                     carInReservation.Reservation = existingReservation;
 
                     car.ReservationCars.Add(carInReservation);
-                    repos.AddToDb(carInReservation);
+                    dbRepos.AddToDb(carInReservation);
                     await UpdateReservationPrice(reservationId);
-                    return await repos.SaveChangesAsync();
+                    return await dbRepos.SaveChangesAsync();
 
                 }
 
@@ -241,14 +248,14 @@ namespace WeddingWise_Infra.Services
                     roomInReservation.Reservation = existingReservation;
 
                     room.ReservationWeddingHalls.Add(roomInReservation);
-                    repos.AddToDb(roomInReservation);
+                    dbRepos.AddToDb(roomInReservation);
 
                     if (roomInReservation.WeddingHall.Id != dto.WeddingHallId)
                     {
                         throw new KeyNotFoundException("The room you chose does not belong to the Hall");
                     }
                     await UpdateReservationPrice(reservationId);
-                    return await repos.SaveChangesAsync();
+                    return await dbRepos.SaveChangesAsync();
 
                 }
 
@@ -273,7 +280,7 @@ namespace WeddingWise_Infra.Services
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
-       
+
                 var userType = payload["UserType"].ToString();
 
                 if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
@@ -283,10 +290,10 @@ namespace WeddingWise_Infra.Services
                 }
 
                 var carReservation = await repos.RemoveCarFromReservation(reservationCarId, reservationId);
-                repos.DeleteFromDb(carReservation);
+                dbRepos.DeleteFromDb(carReservation);
                 await UpdateReservationPrice(reservationId);
 
-                return await repos.SaveChangesAsync(); ;
+                return await dbRepos.SaveChangesAsync(); ;
 
             }
             catch (Exception ex)
@@ -303,7 +310,7 @@ namespace WeddingWise_Infra.Services
                 {
                     throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
- 
+
                 var userType = payload["UserType"].ToString();
 
                 if (!userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
@@ -313,10 +320,10 @@ namespace WeddingWise_Infra.Services
                 }
                 var weddingReservation = await repos.RemoveWeddingRoomFromReservation(reservationWeddingId, reservationId);
 
-                repos.DeleteFromDb(weddingReservation);
+                dbRepos.DeleteFromDb(weddingReservation);
                 await UpdateReservationPrice(reservationId);
 
-                return await repos.SaveChangesAsync(); ;
+                return await dbRepos.SaveChangesAsync(); ;
             }
             catch (Exception ex)
             {
@@ -391,8 +398,8 @@ namespace WeddingWise_Infra.Services
 
                 }
 
-                var reservation = await repos.GetReservationDetails(reservationId,userId);
-                
+                var reservation = await repos.GetReservationDetails(reservationId, userId);
+
                 var reservationDetailsDTO = new ReservationDetailsDTO()
                 {
                     NetPrice = reservation.NetPrice,
@@ -436,7 +443,7 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> Checkout(int reservationId, JwtPayload payload)
+        public async Task<int> Checkout(JwtPayload payload)
         {
             try
             {
@@ -457,12 +464,12 @@ namespace WeddingWise_Infra.Services
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
                 }
-
-                var reservation = await repos.Checkout(reservationId);
-
+                var reservationId = repos.OpenNewReservation(userId);
+                var reservation = await repos.GetReservationById(reservationId.Id);
+                // if(IsPaymentSuccess) returned by payment provider
                 reservation.Status = Status.Confirmed;
-                repos.UpdateOnDb(reservation);
-                var affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(reservation);
+                var affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (Exception ex)

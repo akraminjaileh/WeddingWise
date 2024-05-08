@@ -6,9 +6,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WeddingWise_Core.DTO.Account;
+using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 using WeddingWise_Core.Models.Entities;
+using WeddingWise_Infra.DbRepos;
 using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Infra.Services
@@ -17,11 +19,13 @@ namespace WeddingWise_Infra.Services
     {
         private readonly IAccountRepos repos;
         private readonly IConfiguration configuration;
+        private readonly IDbRepos dbRepos;
 
-        public AccountServices(IAccountRepos repos, IConfiguration configuration)
+        public AccountServices(IAccountRepos repos, IConfiguration configuration , IDbRepos dbRepos)
         {
             this.repos = repos;
             this.configuration = configuration;
+            this.dbRepos = dbRepos;
         }
 
 
@@ -44,9 +48,9 @@ namespace WeddingWise_Infra.Services
 
                 user.UserType = UserType.Client;
                 user.CreationDateTime = DateTime.Now;
-                repos.AddToDb(user);
+                dbRepos.AddToDb(user);
 
-                int affectedRows = await repos.SaveChangesAsync();
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -137,8 +141,8 @@ namespace WeddingWise_Infra.Services
                     user.IsActive = dto.IsActive ?? user.IsActive;
                 }
 
-                repos.UpdateOnDb(user);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(user);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -165,8 +169,8 @@ namespace WeddingWise_Infra.Services
                 if (user != null)
                 {
                     user.IsActive = false;
-                    repos.UpdateOnDb(user);
-                    var affectedRows = await repos.SaveChangesAsync();
+                    dbRepos.UpdateOnDb(user);
+                    var affectedRows = await dbRepos.SaveChangesAsync();
                     return affectedRows;
                 }
 

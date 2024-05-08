@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
+using WeddingWise_Infra.DbRepos;
 using WeddingWise_Infra.Repos;
 using WeddingWise_Infra.Services;
 
@@ -20,6 +22,7 @@ namespace WeddingWise.ServicesReposConfig
             services.AddScoped<IClientRepos, ClientRepos>();
             services.AddScoped<IAgentRepos, AgentRepos>();
             services.AddScoped<IAgentServices, AgentServices>();
+            services.AddScoped<IDbRepos, DbRepos>();
 
         }
     }

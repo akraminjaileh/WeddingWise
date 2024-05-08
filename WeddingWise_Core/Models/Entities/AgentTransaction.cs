@@ -5,13 +5,13 @@ namespace WeddingWise_Core.Models.Entities
 {
     public class AgentTransaction : ParentEntity
     {
-        public decimal Balance { get; set; }  //Total Balance (Available and Pending)
+        public float TotalAmount { get; set; }  //Amount - fees
         public TransactionType TransactionType { get; set; } //Income or Outcome
-        public decimal Amount { get; set; } //Transaction Amount 
-        public decimal Fees { get; set; } //Application Percentage Fees
+        public float Amount { get; set; } //AgentTransaction Amount 
+        public float Fees { get; set; } //Application Percentage Fees
         public Status Status { get; set; } //Transaction Status (Pending  or Completed)
 
-        public virtual User User { get; set; }
+        public virtual User Agent { get; set; }
 
     }
 }

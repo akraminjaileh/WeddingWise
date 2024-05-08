@@ -15,6 +15,8 @@ namespace WeddingWise_Core.IRepos
 
         Task<IEnumerable<AgentTransaction>> GetAllTransaction();
 
-        //Task<IEnumerable<Reservation>>
+        Task<IEnumerable<Reservation>> GetConfirmedReservation();
+
+        Task<IEnumerable<User>> GetAgent();
     }
 }

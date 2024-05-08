@@ -1,11 +1,9 @@
 using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WeddingWise;
 using WeddingWise.ServicesReposConfig;
 using WeddingWise_Core.Context;
-using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 var builder = WebApplication.CreateBuilder(args);
 

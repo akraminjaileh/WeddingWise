@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeddingWise_Core.DTO.CarRental;
-using WeddingWise_Core.DTO.Room;
-using WeddingWise_Core.DTO.User;
-using WeddingWise_Core.DTO.WeddingHall;
-using WeddingWise_Core.Models.Entities;
+﻿using WeddingWise_Core.Models.Entities;
 
 namespace WeddingWise_Core.IRepos
 {

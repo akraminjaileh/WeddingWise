@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Room;
 using WeddingWise_Core.DTO.WeddingHall;
+using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.IServices;
 using WeddingWise_Core.Models.Entities;
@@ -14,8 +15,13 @@ namespace WeddingWise_Infra.Services
     public class AdminServices : IAdminServices
     {
         private readonly IAdminRepos repos;
+        private readonly IDbRepos dbRepos;
 
-        public AdminServices(IAdminRepos repos) => this.repos = repos;
+        public AdminServices(IAdminRepos repos , IDbRepos dbRepos)
+        {
+            this.repos = repos;
+            this.dbRepos = dbRepos;
+        }
 
 
         #region CarRental Management
@@ -64,9 +70,9 @@ namespace WeddingWise_Infra.Services
                 int agent = await repos.GetAgentId(dto.AgentId);
                 car.Agent.Id = agent;
 
-                repos.AddToDb(car);
+                dbRepos.AddToDb(car);
 
-                int affectedRows = await repos.SaveChangesAsync();
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
 
@@ -117,8 +123,8 @@ namespace WeddingWise_Infra.Services
                     car.IsActive = dto.IsActive;
                 }
 
-                repos.AddToDb(car);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.AddToDb(car);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -145,8 +151,8 @@ namespace WeddingWise_Infra.Services
                 var car = await repos.DeleteCar(id);
 
                 car.IsActive = false;
-                repos.UpdateOnDb(car);
-                var affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(car);
+                var affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (Exception ex)
@@ -193,8 +199,8 @@ namespace WeddingWise_Infra.Services
                 }
                 wedding.Agent.Id = agentId;
 
-                repos.AddToDb(wedding);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.AddToDb(wedding);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -229,8 +235,8 @@ namespace WeddingWise_Infra.Services
                     wedding.IsActive = dto.IsActive;
                 }
 
-                repos.UpdateOnDb(wedding);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(wedding);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -255,8 +261,8 @@ namespace WeddingWise_Infra.Services
                 var wedding = await repos.DeleteWeddingHall(id);
 
                 wedding.IsActive = false;
-                repos.UpdateOnDb(wedding);
-                var affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(wedding);
+                var affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
 
 
@@ -299,8 +305,8 @@ namespace WeddingWise_Infra.Services
                 room.WeddingHall.Id = dto.WeddingHallId;
 
 
-                repos.AddToDb(room);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.AddToDb(room);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -338,8 +344,8 @@ namespace WeddingWise_Infra.Services
                     room.IsActive = dto.IsActive;
                 }
 
-                repos.UpdateOnDb(room);
-                int affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(room);
+                int affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
             }
             catch (DbUpdateException ex)
@@ -364,8 +370,8 @@ namespace WeddingWise_Infra.Services
                 var room = await repos.DeleteRoom(id);
 
                 room.IsActive = false;
-                repos.UpdateOnDb(room);
-                var affectedRows = await repos.SaveChangesAsync();
+                dbRepos.UpdateOnDb(room);
+                var affectedRows = await dbRepos.SaveChangesAsync();
                 return affectedRows;
 
             }

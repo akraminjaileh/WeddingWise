@@ -5,10 +5,6 @@ namespace WeddingWise_Core.IRepos
     {
 
 
-        void AddToDb(object obj);
-        void UpdateOnDb(object obj);
-        Task<int> SaveChangesAsync();
-
         //Get Agent Id for Create Car or Wedding
         Task<int> GetAgentId(int AgentId);
 

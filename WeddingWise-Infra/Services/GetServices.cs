@@ -94,7 +94,7 @@ namespace WeddingWise_Infra.Services
                               new AgentTransactionRecordDTO()
                               {
                                   Id = transaction.Id,
-                                  Balance = transaction.Balance,
+                                  TotalAmount = transaction.TotalAmount,
                                   TransactionType = transaction.TransactionType,
                                   Amount = transaction.Amount,
                                   Fees = transaction.Fees,

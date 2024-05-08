@@ -61,7 +61,7 @@ namespace WeddingWise.Controllers
         {
             var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.Checkout(reservationId, payload));
+            return Ok(await services.Checkout( payload));
         }
 
 

@@ -13,26 +13,6 @@ namespace WeddingWise_Infra.Repos
         public ClientRepos(WeddingWiseDbContext context) => this.context = context;
 
 
-        #region Effected on databases
-
-        public void AddToDb(object obj)
-        {
-            context.Add(obj);
-        }
-        public void UpdateOnDb(object obj)
-        {
-            context.Update(obj);
-        }
-        public void DeleteFromDb(object obj)
-        {
-            context.Remove(obj);
-        }
-        public async Task<int> SaveChangesAsync()
-        {
-            return await context.SaveChangesAsync();
-        }
-
-        #endregion
 
 
         #region Reservation Assist 
@@ -48,14 +28,14 @@ namespace WeddingWise_Infra.Repos
             return reservation;
         }
 
-        public async Task<User> OpenNewReservation(int id)
+        public async Task<User> OpenNewReservation(int userId)
         {
             var client = await context.Users
-                .Include(r => r.Reservations).FirstOrDefaultAsync(c => c.Id == id);
+                .Include(r => r.Reservations).FirstOrDefaultAsync(c => c.Id == userId);
 
             if (client == null)
             {
-                throw new KeyNotFoundException($"Client with ID {id} not found.");
+                throw new KeyNotFoundException($"Client with ID {userId} not found.");
             }
             return client;
 
@@ -178,17 +158,7 @@ namespace WeddingWise_Infra.Repos
             return reservation;
         }
 
-        public async Task<Reservation> Checkout(int id)
-        {
-            var reservation = await context.Reservations.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (reservation == null)
-            {
-                throw new KeyNotFoundException($"Reservation with ID {id} not found.");
-            }
-
-            return reservation;
-        }
+  
 
         #endregion
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WeddingWise_Core.DTO.CarRental;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeddingWise_Core.Helper;
 using WeddingWise_Core.IServices;
 
@@ -25,6 +23,16 @@ namespace WeddingWise.Controllers
 
             return Ok(await services.GetAllTransaction(claims));
         }
-        
+
+
+        [HttpPost]
+        [Route("[Action]")]
+        public async Task<IActionResult> TransferAgentTransaction()
+        {
+           await services.TransferAgentTransaction();
+
+            return Ok();
+        }
+
     }
 }

@@ -22,9 +22,7 @@ namespace WeddingWise_Core.Models.EntityConfig
 
             //Check Constraint
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_AgentTransaction_Balance", "Balance >= 0"));
-            builder.ToTable(x =>
-            x.HasCheckConstraint("CH_AgentTransaction_Fees", "Fees >= 0"));
+            x.HasCheckConstraint("CH_AgentTransaction_TotalAmount", "TotalAmount >= 0"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 102"));
             builder.ToTable(x =>

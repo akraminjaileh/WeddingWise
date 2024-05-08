@@ -21,7 +21,7 @@ namespace WeddingWise_Core.Context
             modelBuilder.ApplyConfiguration(new WeddingHallEntityTypeConfiguration());
         }
 
-        public DbSet<AgentTransaction> Transactions { get; set; }
+        public DbSet<AgentTransaction> AgentTransactions { get; set; }
         public DbSet<CarRental> CarRentals { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<ReservationCar> ReservationCars { get; set; }

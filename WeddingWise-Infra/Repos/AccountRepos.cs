@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WeddingWise_Core.Context;
 using WeddingWise_Core.DTO.Account;
+using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.Models.Entities;
 
@@ -9,26 +10,11 @@ namespace WeddingWise_Infra.Repos
     public class AccountRepos : IAccountRepos
     {
         private readonly WeddingWiseDbContext context;
+        private readonly IDbRepos dbRepos;
 
         public AccountRepos(WeddingWiseDbContext context) => this.context = context;
 
 
-        #region Effected on databases
-
-        public void AddToDb(object obj)
-        {
-            context.Add(obj);
-        }
-        public void UpdateOnDb(object obj)
-        {
-            context.Update(obj);
-        }
-        public async Task<int> SaveChangesAsync()
-        {
-            return await context.SaveChangesAsync();
-        }
-
-        #endregion
 
 
 
