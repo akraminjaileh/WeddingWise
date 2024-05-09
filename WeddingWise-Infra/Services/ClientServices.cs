@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Hangfire;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.Reservation;
 using WeddingWise_Core.DTO.ReservationCar;
@@ -15,11 +16,13 @@ namespace WeddingWise_Infra.Services
     {
         private readonly IClientRepos repos;
         private readonly IDbRepos dbRepos;
+        private readonly IAgentServices agentServices;
 
-        public ClientServices(IClientRepos repos , IDbRepos dbRepos)
+        public ClientServices(IClientRepos repos , IDbRepos dbRepos , IAgentServices agentServices)
         {
             this.repos = repos;
             this.dbRepos = dbRepos;
+            this.agentServices = agentServices;
         }
 
 
@@ -27,7 +30,7 @@ namespace WeddingWise_Infra.Services
 
         public async Task<int> OpenNewReservation(int userId)
         {
-            var client = await repos.OpenNewReservation(userId);
+            var client = await repos.GetUserById(userId);
 
             if (!client.UserType.HasFlag(UserType.Client))
             {
@@ -89,7 +92,7 @@ namespace WeddingWise_Infra.Services
 
         public async Task RefreshReservationStatus()
         {
-            return;
+            
             var reservations = repos.GetPendingReservation();
 
             foreach (var reservation in reservations)
@@ -464,13 +467,20 @@ namespace WeddingWise_Infra.Services
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
                 }
-                var reservationId = repos.OpenNewReservation(userId);
-                var reservation = await repos.GetReservationById(reservationId.Id);
+                var reservationId =await OpenNewReservation(userId);
+                var reservation = await repos.GetReservationById(reservationId);
                 // if(IsPaymentSuccess) returned by payment provider
                 reservation.Status = Status.Confirmed;
                 dbRepos.UpdateOnDb(reservation);
                 var affectedRows = await dbRepos.SaveChangesAsync();
+
+                if (affectedRows > 0)
+                {
+                    await agentServices.IncomeAgentAmount(reservation);
+                }
+                
                 return affectedRows;
+                
             }
             catch (Exception ex)
             {

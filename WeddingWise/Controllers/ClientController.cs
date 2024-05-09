@@ -57,7 +57,7 @@ namespace WeddingWise.Controllers
 
         [HttpPut]
         [Route("[Action]")]
-        public async Task<IActionResult> Checkout(int reservationId, [FromHeader] string token)
+        public async Task<IActionResult> Checkout([FromHeader] string token)
         {
             var payload = await JWTDecoding.JWTDecod(token);
 
@@ -67,7 +67,7 @@ namespace WeddingWise.Controllers
 
         [HttpPost]
         [Route("[Action]")]
-        public async Task<IActionResult> AddCarInReservation(ReservationCarDTO dto, [FromHeader] string token)
+        public async Task<IActionResult> AddCarInReservation([FromForm]ReservationCarDTO dto, [FromHeader] string token)
         {
             var payload = await JWTDecoding.JWTDecod(token);
             return Ok(await services.AddCarInReservation(dto , payload));

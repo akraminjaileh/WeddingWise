@@ -25,14 +25,6 @@ namespace WeddingWise.Controllers
         }
 
 
-        [HttpPost]
-        [Route("[Action]")]
-        public async Task<IActionResult> TransferAgentTransaction()
-        {
-           await services.TransferAgentTransaction();
-
-            return Ok();
-        }
 
     }
 }

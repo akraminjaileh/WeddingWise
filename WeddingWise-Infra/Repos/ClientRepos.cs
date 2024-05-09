@@ -28,7 +28,7 @@ namespace WeddingWise_Infra.Repos
             return reservation;
         }
 
-        public async Task<User> OpenNewReservation(int userId)
+        public async Task<User> GetUserById(int userId)
         {
             var client = await context.Users
                 .Include(r => r.Reservations).FirstOrDefaultAsync(c => c.Id == userId);
@@ -47,7 +47,7 @@ namespace WeddingWise_Infra.Repos
             bool isUnavailable = await context.ReservationCars
                 .AnyAsync(r =>
                   r.CarRental.Id == carId &&
-                  r.IsCompleted ||
+                 !r.IsCompleted &&
                 ((r.StartTime <= endTime && r.StartTime >= startTime) ||
                  (r.EndTime >= startTime && r.EndTime <= endTime) ||
                  (r.StartTime <= startTime && r.EndTime >= endTime)));
@@ -60,7 +60,7 @@ namespace WeddingWise_Infra.Repos
         {
             bool isUnavailable = await context.ReservationWeddingHalls.AnyAsync(r =>
                 r.Room.Id == roomId &&
-                r.IsCompleted ||
+               !r.IsCompleted &&
                 ((r.StartTime <= endTime && r.StartTime >= startTime) ||
                  (r.EndTime >= startTime && r.EndTime <= endTime) ||
                  (r.StartTime <= startTime && r.EndTime >= endTime))
@@ -158,7 +158,7 @@ namespace WeddingWise_Infra.Repos
             return reservation;
         }
 
-  
+
 
         #endregion
 

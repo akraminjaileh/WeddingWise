@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.AgentTransaction;
+using WeddingWise_Core.Models.Entities;
 
 namespace WeddingWise_Core.IServices
 {
@@ -7,6 +8,6 @@ namespace WeddingWise_Core.IServices
     {
         Task<IEnumerable<AgentTransactionRecordDTO>> GetAllTransaction(JwtPayload token);
 
-        Task TransferAgentTransaction();
+        Task IncomeAgentAmount(Reservation reservation);
     }
 }

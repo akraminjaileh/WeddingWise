@@ -5,7 +5,7 @@ namespace WeddingWise_Core.IRepos
     public interface IClientRepos
     {
         //Reservation Assist
-        Task<User> OpenNewReservation(int userId);
+        Task<User> GetUserById(int userId);
         Task<Reservation> GetReservationById(int id);
         Task<bool> IsCarAvailable(int carId, DateTime startTime, DateTime endTime);
         Task<bool> IsRoomAvailable(int roomId, DateTime startTime, DateTime endTime);

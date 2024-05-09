@@ -21,6 +21,97 @@ namespace WeddingWise_Infra.Services
             this.dbRepos = dbRepos;
         }
 
+
+        #region Agent Assist
+
+        public async Task IncomeAgentAmount(Reservation reservation)
+        {
+
+            var agent = await repos.GetAgent();
+
+
+            if (reservation.ReservationCars != null)
+            {
+
+                var agentIdInCar = reservation.ReservationCars
+                                          .Select(x => x.CarRental.Agent.Id).ToList();
+
+                foreach (var a in agentIdInCar)
+                {
+                    var agentIdInUser = agent.Where(x => x.Id == a).First();
+
+                    float totalNetPriceCar = reservation.ReservationCars
+                         .Where(x => x.CarRental.Agent == agentIdInUser)
+                         .Sum(car =>
+                         {
+                             var hours = (car.EndTime - car.StartTime).TotalHours;
+                             return (float)hours * car.CarRental.PricePerHour;
+                         });
+
+                    var transaction = new AgentTransaction();
+
+                    transaction.Amount = totalNetPriceCar;
+                    transaction.Fees = FixedPrices.fees * transaction.Amount;
+                    transaction.TotalAmount = transaction.Amount - transaction.Fees;
+                    transaction.Agent = agentIdInUser;
+                    transaction.TransactionType = TransactionType.Income;
+                    dbRepos.UpdateOnDb(transaction);
+                    await dbRepos.SaveChangesAsync();
+
+                }
+            }
+
+
+            if (reservation.ReservationWeddingHalls != null)
+            {
+
+                var agentIdInWedding = reservation.ReservationWeddingHalls
+                                          .Select(x => x.WeddingHall.Agent.Id).ToList();
+
+                foreach (var a in agentIdInWedding)
+                {
+
+                    var agentIdInUser = agent.Where(x => x.Id == a).First();
+
+                    float totalNetPriceWedding = reservation.ReservationWeddingHalls
+                        .Where(x => x.WeddingHall.Agent == agentIdInUser)
+                        .Sum(wedding =>
+                        {
+                            var hours = (wedding.EndTime - wedding.StartTime).TotalHours;
+                            float normalSweetPrice = FixedPrices.normalSweetPrice;
+                            float premiumSweetPrice = FixedPrices.premiumSweetPrice;
+                            float servicesPrice = 0;
+
+                            if (wedding.SweetType.ToString().ToLower().Contains("premium"))
+                            {
+                                servicesPrice = premiumSweetPrice * wedding.GuestCount;
+                            }
+                            servicesPrice = normalSweetPrice * wedding.GuestCount;
+
+                            return ((float)hours * wedding.Room.StartPrice) + servicesPrice;
+
+                        });
+
+                    var transaction = new AgentTransaction();
+
+                    transaction.Amount = totalNetPriceWedding;
+                    transaction.Fees = FixedPrices.fees * transaction.Amount;
+                    transaction.TotalAmount = transaction.Amount - transaction.Fees;
+                    transaction.Agent = agentIdInUser;
+                    transaction.TransactionType = TransactionType.Income;
+                    dbRepos.UpdateOnDb(transaction);
+                    await dbRepos.SaveChangesAsync();
+
+                }
+            }
+
+        }
+
+
+        #endregion
+
+
+        #region Agent Action
         public async Task<IEnumerable<AgentTransactionRecordDTO>> GetAllTransaction(JwtPayload token)
         {
 
@@ -67,92 +158,8 @@ namespace WeddingWise_Infra.Services
             }
         }
 
+        #endregion
 
-        public async Task TransferAgentTransaction()
-        {
-            var reservations = await repos.GetConfirmedReservation();
-            var agent = await repos.GetAgent();
-
-            foreach (var reservation in reservations)
-            {
-
-
-                if (reservation.ReservationCars != null)
-                {
-
-                    var agentIdInCar = reservation.ReservationCars
-                                              .Select(x => x.CarRental.Agent.Id).ToList();
-
-                    foreach (var a in agentIdInCar)
-                    {
-                        var agentIdInUser = agent.Where(x => x.Id == a).First();
-
-                        float totalNetPriceCar = reservation.ReservationCars
-                             .Where(x => x.CarRental.Agent == agentIdInUser)
-                             .Sum(car =>
-                             {
-                                 var hours = (car.EndTime - car.StartTime).TotalHours;
-                                 return (float)hours * car.CarRental.PricePerHour;
-                             });
-
-                        var transaction = new AgentTransaction();
-
-                        transaction.Amount = totalNetPriceCar;
-                        transaction.Fees = FixedPrices.fees * transaction.Amount;
-                        transaction.TotalAmount = transaction.Amount - transaction.Fees;
-                        transaction.Agent = agentIdInUser;
-                        transaction.TransactionType = TransactionType.Income;
-                        dbRepos.UpdateOnDb(transaction);
-                        await dbRepos.SaveChangesAsync();
-
-                    }
-                }
-
-                if (reservation.ReservationWeddingHalls != null)
-                {
-
-                    var agentIdInWedding = reservation.ReservationWeddingHalls
-                                              .Select(x => x.WeddingHall.Agent.Id).ToList();
-
-                    foreach (var a in agentIdInWedding)
-                    {
-
-                        var agentIdInUser = agent.Where(x => x.Id == a).First();
-
-                        float totalNetPriceWedding = reservation.ReservationWeddingHalls
-                            .Where(x => x.WeddingHall.Agent == agentIdInUser)
-                            .Sum(wedding =>
-                            {
-                                var hours = (wedding.EndTime - wedding.StartTime).TotalHours;
-                                float normalSweetPrice = FixedPrices.normalSweetPrice;
-                                float premiumSweetPrice = FixedPrices.premiumSweetPrice;
-                                float servicesPrice = 0;
-
-                                if (wedding.SweetType.ToString().ToLower().Contains("premium"))
-                                {
-                                    servicesPrice = premiumSweetPrice * wedding.GuestCount;
-                                }
-                                servicesPrice = normalSweetPrice * wedding.GuestCount;
-
-                                return ((float)hours * wedding.Room.StartPrice) + servicesPrice;
-
-                            });
-
-                        var transaction = new AgentTransaction();
-
-                        transaction.Amount = totalNetPriceWedding;
-                        transaction.Fees = FixedPrices.fees * transaction.Amount;
-                        transaction.TotalAmount = transaction.Amount - transaction.Fees;
-                        transaction.Agent = agentIdInUser;
-                        transaction.TransactionType = TransactionType.Income;
-                        dbRepos.UpdateOnDb(transaction);
-                        await dbRepos.SaveChangesAsync();
-
-                    }
-                }
-
-            }
-        }
 
 
     }
