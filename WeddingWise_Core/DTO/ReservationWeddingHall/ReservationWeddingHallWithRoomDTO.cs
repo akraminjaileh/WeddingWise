@@ -1,4 +1,5 @@
-﻿using static WeddingWise_Core.Enums.WeddingWiseLookups;
+﻿using WeddingWise_Core.DTO.Room;
+using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.DTO.ReservationWeddingHall
 {
@@ -10,6 +11,6 @@ namespace WeddingWise_Core.DTO.ReservationWeddingHall
         public SweetType SweetType { get; set; }
         public BeverageType BeverageType { get; set; }
         public  int WeddingHallId { get; set; }
-        public  int RoomId { get; set; }
+        public RoomRecordDTO Room { get; set; }
     }
 }

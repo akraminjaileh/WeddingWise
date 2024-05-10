@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeddingWise_Core.Context;
 
@@ -11,9 +12,11 @@ using WeddingWise_Core.Context;
 namespace WeddingWise_Core.Migrations
 {
     [DbContext(typeof(WeddingWiseDbContext))]
-    partial class WeddingWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240509030556_AddFkForAgentTransaction")]
+    partial class AddFkForAgentTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 545, DateTimeKind.Local).AddTicks(4588));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 672, DateTimeKind.Local).AddTicks(6679));
 
                     b.Property<float>("Fees")
                         .HasColumnType("real");
@@ -83,7 +86,7 @@ namespace WeddingWise_Core.Migrations
 
                     b.ToTable("AgentTransactions", t =>
                         {
-                            t.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 106");
+                            t.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 102");
 
                             t.HasCheckConstraint("CH_AgentTransaction_TotalAmount", "TotalAmount >= 0");
 
@@ -123,7 +126,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 545, DateTimeKind.Local).AddTicks(8036));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 672, DateTimeKind.Local).AddTicks(9777));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -203,7 +206,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 546, DateTimeKind.Local).AddTicks(7610));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 673, DateTimeKind.Local).AddTicks(8216));
 
                     b.Property<float>("DiscountAmount")
                         .ValueGeneratedOnAdd()
@@ -372,7 +375,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 547, DateTimeKind.Local).AddTicks(6284));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 674, DateTimeKind.Local).AddTicks(6081));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -448,7 +451,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 553, DateTimeKind.Local).AddTicks(3546));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 681, DateTimeKind.Local).AddTicks(5860));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -535,7 +538,7 @@ namespace WeddingWise_Core.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 5, 9, 18, 25, 21, 553, DateTimeKind.Local).AddTicks(9071));
+                        .HasDefaultValue(new DateTime(2024, 5, 9, 6, 5, 56, 682, DateTimeKind.Local).AddTicks(5188));
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");

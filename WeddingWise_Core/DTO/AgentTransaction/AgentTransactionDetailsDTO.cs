@@ -1,8 +1,10 @@
-﻿using static WeddingWise_Core.Enums.WeddingWiseLookups;
+﻿using WeddingWise_Core.DTO.ReservationCar;
+using WeddingWise_Core.DTO.ReservationWeddingHall;
+using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.DTO.AgentTransaction
 {
-    public class AgentTransactionRecordDTO
+    public class AgentTransactionDetailsDTO
     {
         public int Id { get; set; }
         public float TotalAmount { get; set; }
@@ -11,7 +13,7 @@ namespace WeddingWise_Core.DTO.AgentTransaction
         public float Fees { get; set; }
         public Status Status { get; set; }
         public DateTime CreationDate { get; set; }
-
-        
+        public ReservationCarDTO ReservationCar { get; set; }
+        public ReservationWeddingHallWithRoomDTO ReservationWedding { get; set; }
     }
 }

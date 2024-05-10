@@ -13,6 +13,17 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
 
+            //Foreign key
+            builder.HasOne(x => x.ReservationCar)
+                .WithOne(x => x.AgentTransaction)
+                .HasForeignKey("AgentTransaction", "ReservationCarId")
+                .IsRequired(false);
+
+            builder.HasOne(x => x.ReservationWeddingHall)
+                .WithOne(x => x.AgentTransaction)
+                .HasForeignKey("AgentTransaction", "ReservationWeddingHallId")
+                .IsRequired(false);
+
             //Nullable(is Not Null By Default) ** Default value Config
             builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.CreationDateTime).HasDefaultValue(DateTime.Now);
@@ -24,7 +35,7 @@ namespace WeddingWise_Core.Models.EntityConfig
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_AgentTransaction_TotalAmount", "TotalAmount >= 0"));
             builder.ToTable(x =>
-            x.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 102"));
+            x.HasCheckConstraint("CH_AgentTransaction_Status", "Status = 101 OR Status = 106"));
             builder.ToTable(x =>
             x.HasCheckConstraint("CH_AgentTransaction_TransactionType", "TransactionType BETWEEN 101 AND 102"));
 

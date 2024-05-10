@@ -10,8 +10,10 @@ namespace WeddingWise_Core.Models.Entities
         public float Amount { get; set; } //AgentTransaction Amount 
         public float Fees { get; set; } //Application Percentage Fees
         public Status Status { get; set; } //Transaction Status (Pending  or Completed)
-
+        
         public virtual User Agent { get; set; }
+        public virtual ReservationCar ReservationCar { get; set; }
+        public virtual ReservationWeddingHall ReservationWeddingHall { get; set; }
 
     }
 }

@@ -14,5 +14,8 @@ namespace WeddingWise_Core.Models.Entities
         public virtual WeddingHall WeddingHall { get; set; }
         public virtual Room Room { get; set; }
         public bool IsCompleted { get; set; }
+
+        public virtual AgentTransaction AgentTransaction { get; set; }
+
     }
 }

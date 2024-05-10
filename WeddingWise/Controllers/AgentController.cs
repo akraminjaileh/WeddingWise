@@ -15,16 +15,32 @@ namespace WeddingWise.Controllers
             this.services = services;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllTransaction([FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetAllTransaction(claims));
+            return Ok(await services.GetAllTransaction(payload));
         }
 
+        [HttpGet]
+        [Route("[Action]")]
+        public async Task<IActionResult> GetTransactionDetails([FromHeader] string token , int agentTransactionId)
+        {
+            var payload = await JWTDecoding.JWTDecod(token);
 
+            return Ok(await services.GetTransactionDetails(payload, agentTransactionId));
+        }
+
+        [HttpGet]
+        [Route("[Action]")]
+        public async Task<IActionResult> CheckBalance([FromHeader] string token)
+        {
+            var payload = await JWTDecoding.JWTDecod(token);
+
+            return Ok(await services.CheckBalance(payload));
+        }
 
     }
 }

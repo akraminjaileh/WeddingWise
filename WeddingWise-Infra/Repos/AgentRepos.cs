@@ -15,9 +15,28 @@ namespace WeddingWise_Infra.Repos
         public AgentRepos(WeddingWiseDbContext context) => this.context = context;
 
 
-        public async Task<IEnumerable<AgentTransaction>> GetAllTransaction()
+        public async Task<IEnumerable<AgentTransaction>> GetAllTransaction(int agentId)
         {
-            return await context.AgentTransactions.ToListAsync();
+            return await context.AgentTransactions
+                .Where(x => x.Agent.Id == agentId).ToListAsync();
+        }
+
+        public async Task<AgentTransaction> GetTransactionDetails(int transactionId)
+        {
+            var agentTransaction = await context.AgentTransactions
+                           .FirstOrDefaultAsync(x => x.Id == transactionId);
+
+            if (agentTransaction == null)
+            {
+                throw new KeyNotFoundException($"Agent Transaction with ID {transactionId} not found.");
+            }
+            return agentTransaction;
+        }
+
+        public async Task<IEnumerable<AgentTransaction>> GetAllPendingTransaction()
+        {
+            return await context.AgentTransactions
+                .Where(x => x.Status == Status.Pending).ToListAsync();
         }
 
         public async Task<IEnumerable<Reservation>> GetConfirmedReservation()
@@ -46,3 +65,4 @@ namespace WeddingWise_Infra.Repos
 
     }
 }
+

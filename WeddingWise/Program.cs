@@ -27,8 +27,8 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddSwaggerGenSerilog();
 
 //Hangfire Configure
-builder.Services
 
+builder.Services
         .AddHangfire(configuration => configuration
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
@@ -59,9 +59,13 @@ app.UseSerilogRequestLogging();
 //Hangfire Configure
 app.UseHangfireDashboard();
 app.UseHangfireServer();
+
+//When EndTime <= DateTime.Now
 RecurringJob.AddOrUpdate<IClientServices>("update-reservation-statuses",
        service => service.RefreshReservationStatus(), Cron.MinuteInterval(3));
 
+RecurringJob.AddOrUpdate<IAgentServices>("Update-Transaction-Status",
+       service => service.UpdateTransactionStatus(), Cron.MinuteInterval(3));
 
 app.UseHttpsRedirection();
 

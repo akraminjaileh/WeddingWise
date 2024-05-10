@@ -8,5 +8,6 @@
         public virtual Reservation Reservation { get; set; }
         public virtual CarRental CarRental { get; set; }
         public bool IsCompleted { get; set; }
+        public virtual AgentTransaction AgentTransaction { get; set; }
     }
 }
