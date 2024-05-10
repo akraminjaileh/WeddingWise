@@ -17,7 +17,6 @@ namespace WeddingWise_Core.DTO.CarRental
         public string? Address { get; set; }
         public float? PricePerHour { get; set; }
         public Status? Status { get; set; }
-        public int UserId { get; set; }
         public int AgentId { get; set; }
         public bool IsActive { get; set; }
 

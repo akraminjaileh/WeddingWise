@@ -96,25 +96,28 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload token, int id)
+        public async Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload payload, int id)
         {
 
             try
             {
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
-                    throw new KeyNotFoundException("Invalid Token Claims");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+                int userId;
 
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
 
-                string userType = token.ElementAt(1).Value.ToString();
+                var userType = payload["UserType"].ToString();
 
-                if (token.IsNullOrEmpty())
+                if (userType.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
                 }
+
                 var user = await repos.GetUserById(userId);
 
                 if (userType.Equals(UserType.Admin.ToString()))
@@ -156,15 +159,25 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<int> DisableAccount(int id, string userType)
+        public async Task<int> DisableAccount(int id, JwtPayload payload)
         {
 
             try
             {
-                if (!userType.Equals(UserType.Admin.ToString()))
+
+                if (!payload.Claims.Any())
                 {
-                    throw new KeyNotFoundException("Just Admin Can Disabled Account");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+            
+                var userType = payload["UserType"].ToString();
+
+                if (!userType.Equals(UserType.Admin.ToString()) || userType.IsNullOrEmpty())
+                {
+                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+
+                }
+
                 var user = await repos.GetUserById(id);
                 if (user != null)
                 {

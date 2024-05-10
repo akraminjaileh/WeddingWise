@@ -15,23 +15,7 @@ namespace WeddingWise_Infra.Repos
         public AgentRepos(WeddingWiseDbContext context) => this.context = context;
 
 
-        public async Task<IEnumerable<AgentTransaction>> GetAllTransaction(int agentId)
-        {
-            return await context.AgentTransactions
-                .Where(x => x.Agent.Id == agentId).ToListAsync();
-        }
-
-        public async Task<AgentTransaction> GetTransactionDetails(int transactionId)
-        {
-            var agentTransaction = await context.AgentTransactions
-                           .FirstOrDefaultAsync(x => x.Id == transactionId);
-
-            if (agentTransaction == null)
-            {
-                throw new KeyNotFoundException($"Agent Transaction with ID {transactionId} not found.");
-            }
-            return agentTransaction;
-        }
+        #region Agent Assist
 
         public async Task<IEnumerable<AgentTransaction>> GetAllPendingTransaction()
         {
@@ -62,6 +46,30 @@ namespace WeddingWise_Infra.Repos
 
             return agent;
         }
+
+        #endregion
+
+
+        #region Agent Action
+
+        public async Task<IEnumerable<AgentTransaction>> GetAllTransaction(int agentId)
+        {
+            return await context.AgentTransactions
+                .Where(x => x.Agent.Id == agentId).ToListAsync();
+        }
+
+        public async Task<AgentTransaction> GetTransactionDetails(int transactionId)
+        {
+            var agentTransaction = await context.AgentTransactions
+                           .FirstOrDefaultAsync(x => x.Id == transactionId);
+
+            if (agentTransaction == null)
+            {
+                throw new KeyNotFoundException($"Agent Transaction with ID {transactionId} not found.");
+            }
+            return agentTransaction;
+        }
+
 
         public async Task<CarRental> UpdateCar(int carId)
         {
@@ -97,6 +105,9 @@ namespace WeddingWise_Infra.Repos
 
             return room;
         }
+
+        #endregion
+
 
     }
 }

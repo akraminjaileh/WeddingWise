@@ -10,7 +10,6 @@ namespace WeddingWise_Core.DTO.WeddingHall
         public string? Review { get; set; }
         public City? City { get; set; }
         public string? Address { get; set; }
-        public int UserId { get; set; }
         public int AgentId { get; set; }
         public bool IsActive { get; set; }
     }

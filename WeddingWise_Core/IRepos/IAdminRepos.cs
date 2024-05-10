@@ -5,8 +5,8 @@ namespace WeddingWise_Core.IRepos
     {
 
 
-        //Get Agent Id for Create Car or Wedding
-        Task<int> GetAgentId(int AgentId);
+        //Get User Id for Create Car or Wedding
+        Task<User> GetUserId(int Id);
 
 
         //CarRental Management

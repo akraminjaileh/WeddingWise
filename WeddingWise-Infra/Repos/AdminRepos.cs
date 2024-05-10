@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WeddingWise_Core.Context;
-using WeddingWise_Core.IDbRepos;
 using WeddingWise_Core.IRepos;
 using WeddingWise_Core.Models.Entities;
 
@@ -9,7 +8,6 @@ namespace WeddingWise_Infra.Repos
     public class AdminRepos : IAdminRepos
     {
         private readonly WeddingWiseDbContext context;
-        private readonly IDbRepos dbRepos;
 
         public AdminRepos(WeddingWiseDbContext context) => this.context = context;
 
@@ -19,15 +17,15 @@ namespace WeddingWise_Infra.Repos
 
         #region Get Agent Id for Create Car or Wedding
 
-        public async Task<int> GetAgentId(int AgentId)
+        public async Task<User> GetUserId(int Id)
         {
-            var agent = await context.Users.FindAsync(AgentId);
-            if (agent == null)
+            var user = await context.Users.FindAsync(Id);
+            if (user == null)
             {
-                throw new KeyNotFoundException($"Agent with ID {AgentId} not found.");
+                throw new KeyNotFoundException($"User with ID {Id} not found.");
             }
 
-            return agent.Id;
+            return user;
         }
 
         #endregion

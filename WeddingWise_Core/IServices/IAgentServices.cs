@@ -9,6 +9,8 @@ namespace WeddingWise_Core.IServices
 {
     public interface IAgentServices
     {
+
+
         #region Transaction Assist
 
         Task IncomeAgentAmount(Reservation reservation); // when client make a checkout amount transfer with status pending 101
@@ -16,6 +18,7 @@ namespace WeddingWise_Core.IServices
         Task UpdateTransactionStatus(); // Hangfire > when endTime<=DateTimeNow > update status with available 106
 
         #endregion
+
 
         #region Transaction Action
 
@@ -29,7 +32,6 @@ namespace WeddingWise_Core.IServices
         Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int carId, JwtPayload payload);
 
         #endregion
-
 
 
     }

@@ -9,20 +9,20 @@ namespace WeddingWise_Core.IServices
     {
 
         //CarRental Management
-        Task<int> CreateCar(CreateOrUpdateCarDTO dto, JwtPayload token);
+        Task<int> CreateCar(CreateOrUpdateCarDTO dto, JwtPayload payload);
 
-        Task<int> DeleteCar(int id, string token);
+        Task<int> DeleteCar(int id, JwtPayload payload);
 
 
         //WeddingHall Management
-        Task<int> CreateWeddingHall(CreateOrUpdateWeddingHallDTO dto, JwtPayload token);
+        Task<int> CreateWeddingHall(CreateOrUpdateWeddingHallDTO dto, JwtPayload payload);
  
-        Task<int> DeleteWeddingHall(int id, string token);
+        Task<int> DeleteWeddingHall(int id, JwtPayload payload);
 
         //Room Management
-        Task<int> CreateRoom(CreateOrUpdateRoom dto, JwtPayload token);
+        Task<int> CreateRoom(CreateOrUpdateRoom dto, JwtPayload payload);
     
-        Task<int> DeleteRoom(int id, string token);
+        Task<int> DeleteRoom(int id, JwtPayload payload);
 
     }
 }

@@ -9,8 +9,8 @@ namespace WeddingWise_Core.IServices
         Task<int> Registration(RegistrationDTO dto);
         Task<string> Login(LoginDTO dto);
         // Task Logout(string refreshToken);
-        Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload token,int id);
-        Task<int> DisableAccount(int id, string userType);
+        Task<int> UpdateProfile(UpdateProfileDTO dto, JwtPayload payload, int id);
+        Task<int> DisableAccount(int id, JwtPayload payload);
 
 
     }

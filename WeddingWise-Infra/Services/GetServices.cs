@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using WeddingWise_Core.DTO.AgentTransaction;
 using WeddingWise_Core.DTO.CarRental;
 using WeddingWise_Core.DTO.Reservation;
@@ -22,11 +23,17 @@ namespace WeddingWise_Infra.Services
 
         #region Get User
 
-        public async Task<IEnumerable<UserRecordDTO>> GetAllUser(string token)
+        public async Task<IEnumerable<UserRecordDTO>> GetAllUser(JwtPayload payload)
         {
             try
             {
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+                var userType = payload["UserType"].ToString();
+
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                 {
 
                     var user = await repos.GetAllUser();
@@ -54,11 +61,17 @@ namespace WeddingWise_Infra.Services
         }
 
 
-        public async Task<UserDetailsDTO> GetOneUserDetails(int id, string token)
+        public async Task<UserDetailsDTO> GetOneUserDetails(int id, JwtPayload payload)
         {
             try
             {
-                if (token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Agent.ToString()))
+                if (!payload.Claims.Any())
+                {
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+                }
+                var userType = payload["UserType"].ToString();
+
+                if (userType.Equals(UserType.Employee.ToString()) || userType.Equals(UserType.Admin.ToString()))
                 {
                     var user = await repos.GetOneUserDetails(id);
 
@@ -68,19 +81,15 @@ namespace WeddingWise_Infra.Services
                         Phone = user.Phone,
                         City = user.City,
                         Address = user.Address,
+                        Email = user.Email,
+                        Birthday = user.Birthday,
+                        Image = user.Image,
+                        UserType = user.UserType,
+                        IsActive = user.IsActive,
+                        CreationDateTime = user.CreationDateTime,
                     };
 
-                    if (token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Admin.ToString()))
-                    {
-                        result.Email = user.Email;
-                        result.Birthday = user.Birthday;
-                        result.Image = user.Image;
-                        result.UserType = user.UserType;
-                        result.IsActive = user.IsActive;
-                        result.CreationDateTime = user.CreationDateTime;
-                    }
-
-                    if (token.Equals(UserType.Admin.ToString()))
+                    if (userType.Equals(UserType.Admin.ToString()))
                     {
                         result.NationalNo = user.NationalNo;
                     }
@@ -184,10 +193,11 @@ namespace WeddingWise_Infra.Services
             return dto;
         }
 
-        public async Task<CarRentalDetailsDTO> GetCarsDetails(int id, string token)
+        public async Task<CarRentalDetailsDTO> GetCarsDetails(int id, JwtPayload payload)
         {
             try
             {
+
                 var cars = await repos.GetCarsDetails(id);
 
                 var dto = new CarRentalDetailsDTO()
@@ -205,50 +215,54 @@ namespace WeddingWise_Infra.Services
                     PricePerHour = cars.PricePerHour,
                     Status = cars.Status
                 };
-                if (token.IsNullOrEmpty())
+                if (payload.IsNullOrEmpty())
                 {
                     return dto;
                 }
-
-                if (token.Equals(UserType.Employee.ToString()) || token.Equals(UserType.Admin.ToString()))
+                else
                 {
-                    dto.LicensePlate = cars.LicensePlate;
-                    dto.CreationDateTime = cars.CreationDateTime;
+                    var userType = payload["UserType"].ToString();
 
-                    if (!cars.ReservationCars.IsNullOrEmpty())
+                    if (userType.Equals(UserType.Employee.ToString()) || userType.Equals(UserType.Admin.ToString()))
                     {
-                        cars.ReservationCars.ForEach(car => dto.ReservationCars.Add(
-                          new ReservationCarRecordDTO
-                          {
-                              Id = car.Id,
-                              EndTime = car.EndTime,
-                              StartTime = car.StartTime
-                          }));
-                    }
-                }
+                        dto.LicensePlate = cars.LicensePlate;
+                        dto.CreationDateTime = cars.CreationDateTime;
 
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
-                {
-                    dto.IsActive = cars.IsActive;
-
-                    if (cars.User != null)
-                    {
-                        dto.User = new UserRecordDTO
+                        if (!cars.ReservationCars.IsNullOrEmpty())
                         {
-                            Id = cars.User.Id,
-                            Name = cars.User.Name,
-                            Phone = cars.User.Phone
-                        };
+                            cars.ReservationCars.ForEach(car => dto.ReservationCars.Add(
+                              new ReservationCarRecordDTO
+                              {
+                                  Id = car.Id,
+                                  EndTime = car.EndTime,
+                                  StartTime = car.StartTime
+                              }));
+                        }
                     }
 
-                    if (cars.Agent != null)
+                    if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                     {
-                        dto.Agent = new UserRecordDTO
+                        dto.IsActive = cars.IsActive;
+
+                        if (cars.User != null)
                         {
-                            Id = cars.Agent.Id,
-                            Name = cars.Agent.Name,
-                            Phone = cars.Agent.Phone
-                        };
+                            dto.User = new UserRecordDTO
+                            {
+                                Id = cars.User.Id,
+                                Name = cars.User.Name,
+                                Phone = cars.User.Phone
+                            };
+                        }
+
+                        if (cars.Agent != null)
+                        {
+                            dto.Agent = new UserRecordDTO
+                            {
+                                Id = cars.Agent.Id,
+                                Name = cars.Agent.Name,
+                                Phone = cars.Agent.Phone
+                            };
+                        }
                     }
                 }
 
@@ -283,10 +297,11 @@ namespace WeddingWise_Infra.Services
             return dto;
         }
 
-        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, string token)
+        public async Task<WeddingHallDetailsDTO> GetWeddingDetails(int id, JwtPayload payload)
         {
             try
             {
+
                 var wedding = await repos.GetWeddingDetails(id);
 
                 var dto = new WeddingHallDetailsDTO()
@@ -311,44 +326,48 @@ namespace WeddingWise_Infra.Services
                     }));
                 }
 
-                if (token.IsNullOrEmpty())
+                if (payload.IsNullOrEmpty())
                 {
                     return dto;
                 }
-
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
+                else
                 {
-                    dto.IsActive = wedding.IsActive;
-                    dto.CreationDateTime = wedding.CreationDateTime;
 
-                    if (wedding.ReservationWeddingHalls != null && wedding.ReservationWeddingHalls.Any())
+                    var userType = payload["UserType"].ToString();
+                    if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                     {
-                        wedding.ReservationWeddingHalls.ForEach(wed => dto.ReservationWeddingHalls.Add(new ReservationWeddingHallRecordDTO
-                        {
-                            Id = wed.Id,
-                            StartTime = wed.StartTime,
-                            EndTime = wed.EndTime
-                        }));
-                    }
+                        dto.IsActive = wedding.IsActive;
+                        dto.CreationDateTime = wedding.CreationDateTime;
 
-                    if (wedding.User != null)
-                    {
-                        dto.User = new UserRecordDTO
+                        if (wedding.ReservationWeddingHalls != null && wedding.ReservationWeddingHalls.Any())
                         {
-                            Id = wedding.User.Id,
-                            Name = wedding.User.Name,
-                            Phone = wedding.User.Phone
-                        };
-                    }
+                            wedding.ReservationWeddingHalls.ForEach(wed => dto.ReservationWeddingHalls.Add(new ReservationWeddingHallRecordDTO
+                            {
+                                Id = wed.Id,
+                                StartTime = wed.StartTime,
+                                EndTime = wed.EndTime
+                            }));
+                        }
 
-                    if (wedding.Agent != null)
-                    {
-                        dto.Agent = new UserRecordDTO
+                        if (wedding.User != null)
                         {
-                            Id = wedding.Agent.Id,
-                            Name = wedding.Agent.Name,
-                            Phone = wedding.Agent.Phone
-                        };
+                            dto.User = new UserRecordDTO
+                            {
+                                Id = wedding.User.Id,
+                                Name = wedding.User.Name,
+                                Phone = wedding.User.Phone
+                            };
+                        }
+
+                        if (wedding.Agent != null)
+                        {
+                            dto.Agent = new UserRecordDTO
+                            {
+                                Id = wedding.Agent.Id,
+                                Name = wedding.Agent.Name,
+                                Phone = wedding.Agent.Phone
+                            };
+                        }
                     }
                 }
                 return dto;
@@ -365,10 +384,11 @@ namespace WeddingWise_Infra.Services
 
 
         #region Get Room 
-        public async Task<RoomDetailsDTO> GetRoomDetails(int id, string token)
+        public async Task<RoomDetailsDTO> GetRoomDetails(int id, JwtPayload payload)
         {
             try
             {
+
                 var room = await repos.GetRoomDetails(id);
 
                 var dto = new RoomDetailsDTO()
@@ -381,17 +401,20 @@ namespace WeddingWise_Infra.Services
                     StartPrice = room.StartPrice,
                     Status = room.Status,
                 };
-                if (token.IsNullOrEmpty())
+                if (payload.IsNullOrEmpty())
                 {
                     return dto;
                 }
-
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
+                else
                 {
-                    dto.IsActive = room.IsActive;
-                    dto.CreationDateTime = room.CreationDateTime;
-                }
+                    var userType = payload["UserType"].ToString();
 
+                    if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
+                    {
+                        dto.IsActive = room.IsActive;
+                        dto.CreationDateTime = room.CreationDateTime;
+                    }
+                }
                 return dto;
             }
             catch (Exception ex)

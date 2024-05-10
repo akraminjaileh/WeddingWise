@@ -42,9 +42,9 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> UpdateProfile(UpdateProfileDTO dto, [FromHeader] string token,int id)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            var affectedRows = await services.UpdateProfile(dto, claims,id);
+            var affectedRows = await services.UpdateProfile(dto, payload, id);
             return Ok(affectedRows);
 
         }
@@ -54,11 +54,9 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> DisableAccount(int id, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            var userType = claims.ElementAt(1).Value.ToString();
-
-            var affectedRows = await services.DisableAccount(id, userType);
+            var affectedRows = await services.DisableAccount(id, payload);
             return Ok(affectedRows);
 
 

@@ -17,7 +17,7 @@ namespace WeddingWise_Infra.Services
         private readonly IAdminRepos repos;
         private readonly IDbRepos dbRepos;
 
-        public AdminServices(IAdminRepos repos , IDbRepos dbRepos)
+        public AdminServices(IAdminRepos repos, IDbRepos dbRepos)
         {
             this.repos = repos;
             this.dbRepos = dbRepos;
@@ -26,55 +26,51 @@ namespace WeddingWise_Infra.Services
 
         #region CarRental Management
 
-        public async Task<int> CreateCar(CreateOrUpdateCarDTO dto, JwtPayload token)
+        public async Task<int> CreateCar(CreateOrUpdateCarDTO dto, JwtPayload payload)
         {
             try
             {
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
-                    throw new KeyNotFoundException("Invalid Token Claims");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
+                int userId;
 
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
 
-                string userType = token.ElementAt(1).Value.ToString();
+                var userType = payload["UserType"].ToString();
 
-                if (!userType.Equals(UserType.Admin.ToString()) || !userType.Equals(UserType.Employee.ToString()) || token.IsNullOrEmpty())
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
+                    var car = new CarRental
+                    {
+                        Title = dto.Title,
+                        Image = dto.Image,
+                        Brand = dto.Brand,
+                        Color = dto.Color,
+                        Modal = dto.Modal,
+                        Year = dto.Year.Value,
+                        LicensePlate = dto.LicensePlate,
+                        City = dto.City.Value,
+                        Address = dto.Address,
+                        PricePerHour = dto.PricePerHour.Value,
+
+                    };
+
+                    car.User = await repos.GetUserId(userId);
+
+                    car.Agent = await repos.GetUserId(dto.AgentId);
+
+                    dbRepos.AddToDb(car);
+
+                    int affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
                 }
-
-                var car = new CarRental
-                {
-                    Title = dto.Title,
-                    Image = dto.Image,
-                    Brand = dto.Brand,
-                    Color = dto.Color,
-                    Modal = dto.Modal,
-                    Year = dto.Year.Value,
-                    LicensePlate = dto.LicensePlate,
-                    City = dto.City.Value,
-                    Address = dto.Address,
-                    PricePerHour = dto.PricePerHour.Value,
-
-                };
-
-                car.User.Id = userId;
-
-                if (dto.AgentId <= 0)
-                {
-                    throw new KeyNotFoundException($"Agent with ID {dto.AgentId} not found.");
-                }
-
-                int agent = await repos.GetAgentId(dto.AgentId);
-                car.Agent.Id = agent;
-
-                dbRepos.AddToDb(car);
-
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
+
 
             catch (DbUpdateException ex)
             {
@@ -88,21 +84,36 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> DeleteCar(int id, string token)
+        public async Task<int> DeleteCar(int id, JwtPayload payload)
         {
             try
             {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                if (!payload.Claims.Any())
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
-                var car = await repos.DeleteCar(id);
+                int userId;
 
-                car.IsActive = false;
-                dbRepos.UpdateOnDb(car);
-                var affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
+
+                var userType = payload["UserType"].ToString();
+
+
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
+                {
+
+
+
+
+                    var car = await repos.DeleteCar(id);
+
+                    car.IsActive = false;
+                    dbRepos.UpdateOnDb(car);
+                    var affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
+                }
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
             catch (Exception ex)
             {
@@ -114,43 +125,40 @@ namespace WeddingWise_Infra.Services
 
 
         #region WeddingHall Management
-        public async Task<int> CreateWeddingHall(CreateOrUpdateWeddingHallDTO dto, JwtPayload token)
+        public async Task<int> CreateWeddingHall(CreateOrUpdateWeddingHallDTO dto, JwtPayload payload)
         {
             try
             {
-
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
-                    throw new KeyNotFoundException($"Invalid Token Claims");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
-                int agentId = await repos.GetAgentId(dto.AgentId);
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                int userId;
 
-                string userType = token.ElementAt(1).Value.ToString();
+                if (!int.TryParse(payload["UserId"].ToString(), out userId))
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
 
-                if (!userType.Equals(UserType.Admin.ToString()) || !userType.Equals(UserType.Employee.ToString()))
+                var userType = payload["UserType"].ToString();
+
+
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
+                    var wedding = new WeddingHall
+                    {
+                        Title = dto.Title,
+                        City = dto.City.Value,
+                        Address = dto.Address,
+                    };
+
+                    wedding.User = await repos.GetUserId(userId);
+                    wedding.Agent = await repos.GetUserId(dto.AgentId);
+
+                    dbRepos.AddToDb(wedding);
+                    int affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
                 }
-                var wedding = new WeddingHall
-                {
-                    Title = dto.Title,
-                    City = dto.City.Value,
-                    Address = dto.Address,
-                };
-
-                wedding.User.Id = userId;
-
-                if (dto.AgentId <= 0)
-                {
-                    throw new KeyNotFoundException($"Agent with ID {dto.AgentId} not found.");
-                }
-                wedding.Agent.Id = agentId;
-
-                dbRepos.AddToDb(wedding);
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
             catch (DbUpdateException ex)
             {
@@ -162,25 +170,31 @@ namespace WeddingWise_Infra.Services
             }
         }
 
-        
 
-        public async Task<int> DeleteWeddingHall(int id, string token)
+
+        public async Task<int> DeleteWeddingHall(int id, JwtPayload payload)
         {
             try
             {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                if (!payload.Claims.Any())
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
 
-                var wedding = await repos.DeleteWeddingHall(id);
-
-                wedding.IsActive = false;
-                dbRepos.UpdateOnDb(wedding);
-                var affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
+                var userType = payload["UserType"].ToString();
 
 
+                if (!userType.Equals(UserType.Admin.ToString()) || !userType.Equals(UserType.Employee.ToString()))
+                {
+
+                    var wedding = await repos.DeleteWeddingHall(id);
+
+                    wedding.IsActive = false;
+                    dbRepos.UpdateOnDb(wedding);
+                    var affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
+                }
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
             catch (Exception ex)
             {
@@ -192,37 +206,35 @@ namespace WeddingWise_Infra.Services
 
 
         #region Room Management
-        public async Task<int> CreateRoom(CreateOrUpdateRoom dto, JwtPayload token)
+        public async Task<int> CreateRoom(CreateOrUpdateRoom dto, JwtPayload payload)
         {
             try
             {
-                if (!token.Claims.Any())
+                if (!payload.Claims.Any())
                 {
-                    throw new KeyNotFoundException($"Invalid Token Claims");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
 
-                int userId = int.Parse(token.ElementAt(0).Value.ToString());
+                var userType = payload["UserType"].ToString();
 
-                string userType = token.ElementAt(1).Value.ToString();
-
-                if (!userType.Equals(UserType.Admin.ToString()) || !userType.Equals(UserType.Employee.ToString()))
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
+                    var room = new Room
+                    {
+                        RoomName = dto.RoomName,
+                        SeatsNumber = dto.SeatsNumber,
+                        Floor = dto.Floor,
+                        StartPrice = dto.StartPrice.Value,
+                    };
+                    room.WeddingHall.Id = dto.WeddingHallId;
+
+
+                    dbRepos.AddToDb(room);
+                    int affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
                 }
-                var room = new Room
-                {
-                    RoomName = dto.RoomName,
-                    SeatsNumber = dto.SeatsNumber,
-                    Floor = dto.Floor,
-                    StartPrice = dto.StartPrice.Value,
-                };
-                room.WeddingHall.Id = dto.WeddingHallId;
-
-
-                dbRepos.AddToDb(room);
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
             catch (DbUpdateException ex)
             {
@@ -234,24 +246,33 @@ namespace WeddingWise_Infra.Services
             }
         }
 
-       
 
-        public async Task<int> DeleteRoom(int id, string token)
+
+        public async Task<int> DeleteRoom(int id, JwtPayload payload)
         {
             try
             {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
+                if (!payload.Claims.Any())
                 {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
+                    throw new UnauthorizedAccessException("Invalid Token Claims");
                 }
 
-                var room = await repos.DeleteRoom(id);
+                var userType = payload["UserType"].ToString();
 
-                room.IsActive = false;
-                dbRepos.UpdateOnDb(room);
-                var affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
 
+                if (userType.Equals(UserType.Admin.ToString()) || userType.Equals(UserType.Employee.ToString()))
+                {
+
+
+                    var room = await repos.DeleteRoom(id);
+
+                    room.IsActive = false;
+                    dbRepos.UpdateOnDb(room);
+                    var affectedRows = await dbRepos.SaveChangesAsync();
+                    return affectedRows;
+
+                }
+                throw new UnauthorizedAccessException("User does not have sufficient permissions.");
             }
             catch (Exception ex)
             {

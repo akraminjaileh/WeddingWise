@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using WeddingWise_Core.Helper;
 using WeddingWise_Core.IServices;
-using WeddingWise_Infra.Services;
 
 namespace WeddingWise.Controllers
 {
@@ -19,16 +18,15 @@ namespace WeddingWise.Controllers
             this.logger = logger;
         }
 
-     
+
         //For Admin and Employee
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllUser([FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetAllUser(userType));
+            return Ok(await services.GetAllUser(payload));
         }
 
         //For Admin and Employee
@@ -36,14 +34,12 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> GetOneUser(int id, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            var userType = claims.ElementAt(1).Value.ToString();
-
-            return Ok(await services.GetOneUserDetails(id, userType));
+            return Ok(await services.GetOneUserDetails(id, payload));
         }
 
- 
+
         [HttpGet]
         [Route("[Action]")]
         public async Task<IActionResult> GetAllCar()
@@ -60,10 +56,9 @@ namespace WeddingWise.Controllers
             {
                 return Ok(await services.GetCarsDetails(id, null));
             }
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetCarsDetails(id, userType));
+            return Ok(await services.GetCarsDetails(id, payload));
         }
 
 
@@ -84,10 +79,9 @@ namespace WeddingWise.Controllers
             {
                 return Ok(await services.GetWeddingDetails(id, null));
             }
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetWeddingDetails(id, userType));
+            return Ok(await services.GetWeddingDetails(id, payload));
         }
 
 
@@ -99,10 +93,9 @@ namespace WeddingWise.Controllers
             {
                 return Ok(await services.GetRoomDetails(id, null));
             }
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.GetRoomDetails(id, userType));
+            return Ok(await services.GetRoomDetails(id, payload));
         }
 
     }

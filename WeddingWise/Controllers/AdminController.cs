@@ -29,9 +29,9 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> CreateCar(CreateOrUpdateCarDTO dto, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
+            var payload = await JWTDecoding.JWTDecod(token);
 
-            return Ok(await services.CreateCar(dto, claims));
+            return Ok(await services.CreateCar(dto, payload));
         }
 
 
@@ -40,9 +40,8 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> DeleteCar(int id, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.DeleteCar(id, userType));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.DeleteCar(id, payload));
         }
 
         #endregion
@@ -54,8 +53,8 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> CreateWedding(CreateOrUpdateWeddingHallDTO dto, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            return Ok(await services.CreateWeddingHall(dto, claims));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.CreateWeddingHall(dto, payload));
         }
 
 
@@ -64,9 +63,8 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> DeleteWedding(int id, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.DeleteWeddingHall(id, userType));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.DeleteWeddingHall(id, payload));
         }
 
         #endregion
@@ -80,8 +78,8 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> CreateRoom(CreateOrUpdateRoom dto, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            return Ok(await services.CreateRoom(dto, claims));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.CreateRoom(dto, payload));
         }
 
 
@@ -89,9 +87,8 @@ namespace WeddingWise.Controllers
         [Route("[Action]")]
         public async Task<IActionResult> DeleteRoom(int id, [FromHeader] string token)
         {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.DeleteRoom(id, userType));
+            var payload = await JWTDecoding.JWTDecod(token);
+            return Ok(await services.DeleteRoom(id, payload));
         }
 
         #endregion

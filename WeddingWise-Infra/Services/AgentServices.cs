@@ -332,7 +332,7 @@ namespace WeddingWise_Infra.Services
 
                 var userType = payload["UserType"].ToString();
 
-                if (!userType.Equals(UserType.Agent.ToString()) || payload.IsNullOrEmpty())
+                if (userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
@@ -390,7 +390,7 @@ namespace WeddingWise_Infra.Services
 
                 var userType = payload["UserType"].ToString();
 
-                if (!userType.Equals(UserType.Agent.ToString()) || payload.IsNullOrEmpty())
+                if (userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
@@ -435,7 +435,7 @@ namespace WeddingWise_Infra.Services
 
                 var userType = payload["UserType"].ToString();
 
-                if (!userType.Equals(UserType.Agent.ToString()) || payload.IsNullOrEmpty())
+                if (userType.Equals(UserType.Client.ToString()) || payload.IsNullOrEmpty())
                 {
                     throw new UnauthorizedAccessException("User does not have sufficient permissions.");
 
