@@ -63,6 +63,41 @@ namespace WeddingWise_Infra.Repos
             return agent;
         }
 
+        public async Task<CarRental> UpdateCar(int carId)
+        {
+            var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == carId);
+            if (car == null)
+            {
+                throw new KeyNotFoundException($"Car with ID {carId} not found.");
+            }
+
+            return car;
+        }
+
+        public async Task<WeddingHall> UpdateWeddingHall(int weddingId)
+        {
+            var wedding = await context.WeddingHalls.FirstOrDefaultAsync(x => x.Id == weddingId);
+            if (wedding == null)
+            {
+                throw new KeyNotFoundException($"Wedding with ID {weddingId} not found.");
+            }
+
+            return wedding;
+        }
+
+
+        public async Task<Room> UpdateRoom(int roomId)
+        {
+            var room = await context.Rooms.FirstOrDefaultAsync(x => x.Id == roomId);
+
+            if (room == null)
+            {
+                throw new KeyNotFoundException($"Room with ID {roomId} not found.");
+            }
+
+            return room;
+        }
+
     }
 }
 

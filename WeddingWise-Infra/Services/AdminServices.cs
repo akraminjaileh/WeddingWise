@@ -88,57 +88,6 @@ namespace WeddingWise_Infra.Services
 
 
 
-        public async Task<int> UpdateCar(CreateOrUpdateCarDTO dto, int id, string token)
-        {
-            try
-            {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
-                {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-
-                }
-
-                var car = await repos.UpdateCar(id);
-
-                if (car == null)
-                {
-                    throw new KeyNotFoundException($"Car with ID {id} not found.");
-                }
-
-                car.Title = dto.Title ?? car.Title;
-                car.Image = dto.Image ?? car.Image;
-                car.Brand = dto.Brand ?? car.Brand;
-                car.Color = dto.Color ?? car.Color;
-                car.Description = dto.Description ?? car.Description;
-                car.Modal = dto.Modal ?? car.Modal;
-                car.City = dto.City ?? car.City;
-                car.Address = dto.Address ?? car.Address;
-                car.PricePerHour = dto.PricePerHour ?? car.PricePerHour;
-                car.Status = dto.Status ?? car.Status;
-
-                if (token.Equals(UserType.Admin.ToString()) || token.Equals(UserType.Employee.ToString()))
-                {
-                    car.Year = dto.Year ?? car.Year;
-                    car.LicensePlate = dto.LicensePlate ?? car.LicensePlate;
-                    car.IsActive = dto.IsActive;
-                }
-
-                dbRepos.AddToDb(car);
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Failed to update car rental due to database constraints.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while updating car rental.", ex);
-            }
-        }
-
-
-
         public async Task<int> DeleteCar(int id, string token)
         {
             try
@@ -213,41 +162,7 @@ namespace WeddingWise_Infra.Services
             }
         }
 
-        public async Task<int> UpdateWeddingHall(CreateOrUpdateWeddingHallDTO dto, int id, string token)
-        {
-            try
-            {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
-                {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-                }
-
-                var wedding = await repos.UpdateWeddingHall(id);
-
-                wedding.Title = dto.Title ?? wedding.Title;
-                wedding.Image = dto.Image ?? wedding.Image;
-
-                if (token.Equals(UserType.Admin.ToString()))
-                {
-                    wedding.City = dto.City ?? wedding.City;
-                    wedding.Address = dto.Address ?? wedding.Address;
-                    wedding.Review = dto.Review ?? wedding.Review;
-                    wedding.IsActive = dto.IsActive;
-                }
-
-                dbRepos.UpdateOnDb(wedding);
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Failed to update Wedding due to database constraints.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while updating Wedding.", ex);
-            }
-        }
+        
 
         public async Task<int> DeleteWeddingHall(int id, string token)
         {
@@ -319,44 +234,7 @@ namespace WeddingWise_Infra.Services
             }
         }
 
-        public async Task<int> UpdateRoom(CreateOrUpdateRoom dto, int id, string token)
-        {
-            try
-            {
-                if (token.Equals(UserType.Client.ToString()) || token.IsNullOrEmpty())
-                {
-                    throw new UnauthorizedAccessException("User does not have sufficient permissions.");
-                }
-
-                var room = await repos.UpdateRoom(id);
-
-                room.RoomName = dto.RoomName ?? room.RoomName;
-                room.Image = dto.Image ?? room.Image;
-                room.SeatsNumber = dto.SeatsNumber;
-                room.Floor = dto.Floor ?? room.Floor;
-                room.Description = dto.Description ?? room.Description;
-                room.StartPrice = dto.StartPrice ?? room.StartPrice;
-                room.Status = dto.Status ?? room.Status;
-
-                if (token.Equals(UserType.Admin.ToString()))
-                {
-
-                    room.IsActive = dto.IsActive;
-                }
-
-                dbRepos.UpdateOnDb(room);
-                int affectedRows = await dbRepos.SaveChangesAsync();
-                return affectedRows;
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new InvalidOperationException("Failed to update Room due to database constraints.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while updating Room.", ex);
-            }
-        }
+       
 
         public async Task<int> DeleteRoom(int id, string token)
         {

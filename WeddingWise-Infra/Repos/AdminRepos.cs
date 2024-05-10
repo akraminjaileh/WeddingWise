@@ -35,19 +35,6 @@ namespace WeddingWise_Infra.Repos
 
         #region CarRental Management
 
-        public async Task<CarRental> UpdateCar(int id)
-        {
-            var car = await context.CarRentals.FirstOrDefaultAsync(x => x.Id == id);
-            if (car == null)
-            {
-                throw new KeyNotFoundException($"Car with ID {id} not found.");
-            }
-
-            return car;
-        }
-
-
-
         public async Task<CarRental> DeleteCar(int id)
         {
 
@@ -65,18 +52,6 @@ namespace WeddingWise_Infra.Repos
 
 
         #region WeddingHall Management
-
-
-        public async Task<WeddingHall> UpdateWeddingHall(int id)
-        {
-            var wedding = await context.WeddingHalls.FirstOrDefaultAsync(x => x.Id == id);
-            if (wedding == null)
-            {
-                throw new KeyNotFoundException($"Wedding with ID {id} not found.");
-            }
-
-            return wedding;
-        }
 
         public async Task<WeddingHall> DeleteWeddingHall(int id)
         {
@@ -96,17 +71,6 @@ namespace WeddingWise_Infra.Repos
         #region Room Management
 
 
-        public async Task<Room> UpdateRoom(int id)
-        {
-            var room = await context.Rooms.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (room == null)
-            {
-                throw new KeyNotFoundException($"Room with ID {id} not found.");
-            }
-
-            return room;
-        }
 
         public async Task<Room> DeleteRoom(int id)
         {

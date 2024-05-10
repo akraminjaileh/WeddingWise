@@ -34,15 +34,7 @@ namespace WeddingWise.Controllers
             return Ok(await services.CreateCar(dto, claims));
         }
 
-        [HttpPut]
-        [Route("[Action]")]
-        public async Task<IActionResult> UpdateCar(CreateOrUpdateCarDTO dto, int id, [FromHeader] string token)
-        {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
 
-            return Ok(await services.UpdateCar(dto, id, userType));
-        }
 
         [HttpDelete]
         [Route("[Action]")]
@@ -66,14 +58,7 @@ namespace WeddingWise.Controllers
             return Ok(await services.CreateWeddingHall(dto, claims));
         }
 
-        [HttpPut]
-        [Route("[Action]")]
-        public async Task<IActionResult> UpdateWedding(CreateOrUpdateWeddingHallDTO dto, int id, [FromHeader] string token)
-        {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.UpdateWeddingHall(dto, id, userType));
-        }
+
 
         [HttpDelete]
         [Route("[Action]")]
@@ -99,14 +84,6 @@ namespace WeddingWise.Controllers
             return Ok(await services.CreateRoom(dto, claims));
         }
 
-        [HttpPut]
-        [Route("[Action]")]
-        public async Task<IActionResult> UpdateRoom(CreateOrUpdateRoom dto, int id, [FromHeader] string token)
-        {
-            var claims = await JWTDecoding.JWTDecod(token);
-            var userType = claims.ElementAt(1).Value.ToString();
-            return Ok(await services.UpdateRoom(dto, id, userType));
-        }
 
         [HttpDelete]
         [Route("[Action]")]

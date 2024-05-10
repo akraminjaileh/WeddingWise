@@ -22,5 +22,11 @@ namespace WeddingWise_Core.IRepos
         Task<IEnumerable<AgentTransaction>> GetAllPendingTransaction();
 
         Task<AgentTransaction> GetTransactionDetails(int transactionId);
+
+        Task<CarRental> UpdateCar(int carId);
+
+        Task<WeddingHall> UpdateWeddingHall(int weddingId);
+
+        Task<Room> UpdateRoom(int roomId);
     }
 }
