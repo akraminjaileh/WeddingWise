@@ -11,6 +11,6 @@ namespace WeddingWise_Core.DTO.ReservationWeddingHall
         public SweetType SweetType { get; set; }
         public BeverageType BeverageType { get; set; }
         public  int WeddingHallId { get; set; }
-        public RoomRecordDTO Room { get; set; }
+        public int RoomId { get; set; }
     }
 }

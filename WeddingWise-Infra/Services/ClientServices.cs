@@ -223,14 +223,14 @@ namespace WeddingWise_Infra.Services
 
                 }
 
-                var room = await repos.AddWeddingRoomInReservation(dto.Room.Id);
+                var room = await repos.AddWeddingRoomInReservation(dto.RoomId);
 
                 if (room.Status.HasFlag(Status.NotAvailable))
                 {
                     throw new KeyNotFoundException($"This Room is Not Available Now");
                 }
 
-                if (await repos.IsRoomAvailable(dto.Room.Id, dto.StartTime, dto.EndTime))
+                if (await repos.IsRoomAvailable(dto.RoomId, dto.StartTime, dto.EndTime))
                 {
                     var roomInReservation = new ReservationWeddingHall()
                     {

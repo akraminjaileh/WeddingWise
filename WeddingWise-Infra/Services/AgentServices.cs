@@ -230,19 +230,20 @@ namespace WeddingWise_Infra.Services
                 {
                     result.ReservationWedding = new ReservationWeddingHallWithRoomDTO
                     {
-                        WeddingHallId = agentTrans.ReservationWeddingHall.Id,
+                        WeddingHallId = agentTrans.ReservationWeddingHall.WeddingHall.Id,
                         StartTime = agentTrans.ReservationWeddingHall.StartTime,
                         EndTime = agentTrans.ReservationWeddingHall.EndTime,
                         BeverageType = agentTrans.ReservationWeddingHall.BeverageType,
                         SweetType = agentTrans.ReservationWeddingHall.SweetType,
                         GuestCount = agentTrans.ReservationWeddingHall.GuestCount,
+                        RoomId = agentTrans.ReservationWeddingHall.Room.Id
 
                     };
 
 
                     if (agentTrans.ReservationWeddingHall.Room != null)
                     {
-                        result.ReservationWedding.Room = new RoomRecordDTO
+                        result.Room = new RoomRecordDTO
                         {
                             Id = agentTrans.ReservationWeddingHall.Room.Id,
                             RoomName = agentTrans.ReservationWeddingHall.Room.RoomName,

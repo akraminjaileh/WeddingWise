@@ -1,5 +1,6 @@
 ﻿using WeddingWise_Core.DTO.ReservationCar;
 using WeddingWise_Core.DTO.ReservationWeddingHall;
+using WeddingWise_Core.DTO.Room;
 using static WeddingWise_Core.Enums.WeddingWiseLookups;
 
 namespace WeddingWise_Core.DTO.AgentTransaction
@@ -15,5 +16,6 @@ namespace WeddingWise_Core.DTO.AgentTransaction
         public DateTime CreationDate { get; set; }
         public ReservationCarDTO ReservationCar { get; set; }
         public ReservationWeddingHallWithRoomDTO ReservationWedding { get; set; }
+        public RoomRecordDTO Room {  get; set; }
     }
 }
